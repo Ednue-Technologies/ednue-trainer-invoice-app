@@ -10,7 +10,8 @@
         </button>
     </div>
 
-    <div class="table-container">
+    <!-- Desktop Table View -->
+    <div class="hidden md:block table-container">
         <table>
             <thead>
                 <tr>
@@ -77,5 +78,77 @@
                 </tr>
             </tbody>
         </table>
+    </div>
+
+    <!-- Mobile Card View -->
+    <div class="md:hidden space-y-4">
+        <div *ngFor="let student of invoiceService.students(); let i = index; trackBy: trackByIndex"
+            class="bg-slate-50 p-4 rounded-lg border border-slate-200 relative">
+
+            <div class="absolute top-2 right-2 flex gap-2">
+                <button *ngIf="i === 0" class="btn-icon text-green-600 bg-white p-1 rounded shadow-sm"
+                    title="Copy to All" (click)="copyToAll(i)">
+                    <lucide-icon [img]="CopyCheck" class="w-4 h-4"></lucide-icon>
+                </button>
+                <button *ngIf="invoiceService.students().length > 1"
+                    class="btn-icon text-red-500 bg-white p-1 rounded shadow-sm" title="Remove"
+                    (click)="removeStudent(i)">
+                    <lucide-icon [img]="Trash2" class="w-4 h-4"></lucide-icon>
+                </button>
+            </div>
+
+            <div class="font-bold text-slate-400 text-xs mb-3 uppercase tracking-wider">Student #{{ i + 1 }}</div>
+
+            <div class="space-y-3">
+                <div>
+                    <label class="text-xs">Student Name</label>
+                    <input type="text" [ngModel]="student.name" (ngModelChange)="update(i, 'name', $event)"
+                        placeholder="Name" class="w-full p-2 rounded border border-slate-300 text-sm">
+                </div>
+
+                <div>
+                    <label class="text-xs">Course</label>
+                    <input type="text" [ngModel]="student.courseName" (ngModelChange)="update(i, 'courseName', $event)"
+                        placeholder="Course Name" class="w-full p-2 rounded border border-slate-300 text-sm" />
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs">Duration</label>
+                        <div class="flex gap-1">
+                            <input type="number" [ngModel]="student.duration"
+                                (ngModelChange)="update(i, 'duration', $event)" placeholder="0"
+                                class="w-full p-2 rounded border border-slate-300 text-sm" min="0">
+                            <select [ngModel]="student.durationUnit" (ngModelChange)="update(i, 'durationUnit', $event)"
+                                class="p-2 rounded border border-slate-300 text-sm bg-white">
+                                <option value="hours">Hrs</option>
+                                <option value="days">Days</option>
+                                <option value="weeks">Wks</option>
+                                <option value="months">Mths</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2">
+                    <div>
+                        <label class="text-xs">Start Date</label>
+                        <input type="date" [ngModel]="student.startDate"
+                            (ngModelChange)="update(i, 'startDate', $event)"
+                            class="w-full p-2 rounded border border-slate-300 text-sm">
+                    </div>
+                    <div>
+                        <label class="text-xs">End Date</label>
+                        <input type="date" [ngModel]="student.endDate" (ngModelChange)="update(i, 'endDate', $event)"
+                            (blur)="validateEndDate(i, student.endDate)"
+                            class="w-full p-2 rounded border border-slate-300 text-sm"
+                            [class.error-input]="invoiceService.errors()['studentEndDate_' + i]">
+                    </div>
+                </div>
+                <span class="error-msg block" *ngIf="invoiceService.errors()['studentEndDate_' + i]">
+                    {{ invoiceService.errors()['studentEndDate_' + i] }}
+                </span>
+            </div>
+        </div>
     </div>
 </div>
