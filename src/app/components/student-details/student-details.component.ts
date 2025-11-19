@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { InvoiceService } from '../../services/invoice.service';
-import { LucideAngularModule, Users, Plus, Trash2, Copy } from 'lucide-angular';
+import { LucideAngularModule, Users, Plus, Trash2, Copy, CopyCheck } from 'lucide-angular';
 
 @Component({
     selector: 'app-student-details',
@@ -18,6 +18,7 @@ export class StudentDetailsComponent {
     Plus = Plus;
     Trash2 = Trash2;
     Copy = Copy;
+    CopyCheck = CopyCheck;
 
     addStudent() {
         this.invoiceService.addStudent();
@@ -29,6 +30,10 @@ export class StudentDetailsComponent {
 
     copyPrevious(index: number) {
         this.invoiceService.copyPreviousStudent(index);
+    }
+
+    copyToAll(index: number) {
+        this.invoiceService.copyToAllStudents(index);
     }
 
     update(index: number, field: string, value: string) {

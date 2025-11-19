@@ -20,6 +20,29 @@ export class CourseDetailsComponent {
     Calculator = Calculator;
 
     update(field: string, value: any) {
+        if (field === 'totalStudents') {
+            const newCount = Number(value);
+            const currentStudents = this.invoiceService.students();
+
+            // Check if we are reducing the count
+            if (newCount < currentStudents.length) {
+                // Get the students that will be removed
+                const studentsToRemove = currentStudents.slice(newCount);
+
+                // Check if any of them have data (name, start date, or end date)
+                // We ignore course details as they might be auto-copied
+                const hasData = studentsToRemove.some(s => s.name || s.startDate || s.endDate);
+
+                if (hasData) {
+                    if (!confirm('Reducing the student count will delete existing data. Are you sure?')) {
+                        // If cancelled, we need to revert the input.
+                        // Triggering a signal update with the same value might force the UI to refresh.
+                        this.invoiceService.course.update(c => ({ ...c }));
+                        return;
+                    }
+                }
+            }
+        }
         this.invoiceService.updateCourse({ [field]: value });
     }
 
