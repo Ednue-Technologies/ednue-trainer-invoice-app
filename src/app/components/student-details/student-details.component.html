@@ -11,16 +11,16 @@
     </div>
 
     <!-- Desktop Table View -->
-    <div class="hidden md:block table-container">
+    <div class="desktop-view table-container">
         <table>
             <thead>
                 <tr>
                     <th style="width: 50px;">#</th>
-                    <th>Student Name</th>
-                    <th>Course</th>
-                    <th>Duration</th>
-                    <th>Start Date</th>
-                    <th>End Date</th>
+                    <th data-tooltip="Full name of the student">Student Name</th>
+                    <th data-tooltip="Course enrolled in">Course</th>
+                    <th data-tooltip="Duration of the course">Duration</th>
+                    <th data-tooltip="Course start date">Start Date</th>
+                    <th data-tooltip="Course end date">End Date</th>
                     <th style="width: 100px;">Actions</th>
                 </tr>
             </thead>
@@ -66,11 +66,11 @@
                     <td>
                         <div class="flex gap-2 justify-center">
                             <button *ngIf="i === 0" class="btn-icon text-green-600" title="Copy to All"
-                                (click)="copyToAll(i)">
+                                (click)="copyToAll(i)" data-tooltip="Copy details to all rows">
                                 <lucide-icon [img]="CopyCheck" class="w-4 h-4"></lucide-icon>
                             </button>
                             <button *ngIf="invoiceService.students().length > 1" class="btn-icon text-red-500"
-                                title="Remove" (click)="removeStudent(i)">
+                                title="Remove" (click)="removeStudent(i)" data-tooltip="Remove this student">
                                 <lucide-icon [img]="Trash2" class="w-4 h-4"></lucide-icon>
                             </button>
                         </div>
@@ -81,7 +81,7 @@
     </div>
 
     <!-- Mobile Card View -->
-    <div class="md:hidden space-y-4">
+    <div class="mobile-view space-y-4">
         <div *ngFor="let student of invoiceService.students(); let i = index; trackBy: trackByIndex"
             class="bg-slate-50 p-4 rounded-lg border border-slate-200 relative">
 
@@ -101,20 +101,20 @@
 
             <div class="space-y-3">
                 <div>
-                    <label class="text-xs">Student Name</label>
+                    <label class="text-xs" data-tooltip="Full name of the student">Student Name</label>
                     <input type="text" [ngModel]="student.name" (ngModelChange)="update(i, 'name', $event)"
                         placeholder="Name" class="w-full p-2 rounded border border-slate-300 text-sm">
                 </div>
 
                 <div>
-                    <label class="text-xs">Course</label>
+                    <label class="text-xs" data-tooltip="Course enrolled in">Course</label>
                     <input type="text" [ngModel]="student.courseName" (ngModelChange)="update(i, 'courseName', $event)"
                         placeholder="Course Name" class="w-full p-2 rounded border border-slate-300 text-sm" />
                 </div>
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-xs">Duration</label>
+                        <label class="text-xs" data-tooltip="Duration of the course">Duration</label>
                         <div class="flex gap-1">
                             <input type="number" [ngModel]="student.duration"
                                 (ngModelChange)="update(i, 'duration', $event)" placeholder="0"
@@ -132,13 +132,13 @@
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="text-xs">Start Date</label>
+                        <label class="text-xs" data-tooltip="Course start date">Start Date</label>
                         <input type="date" [ngModel]="student.startDate"
                             (ngModelChange)="update(i, 'startDate', $event)"
                             class="w-full p-2 rounded border border-slate-300 text-sm">
                     </div>
                     <div>
-                        <label class="text-xs">End Date</label>
+                        <label class="text-xs" data-tooltip="Course end date">End Date</label>
                         <input type="date" [ngModel]="student.endDate" (ngModelChange)="update(i, 'endDate', $event)"
                             (blur)="validateEndDate(i, student.endDate)"
                             class="w-full p-2 rounded border border-slate-300 text-sm"

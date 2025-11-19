@@ -6,7 +6,7 @@
 
     <div class="grid-2">
         <div>
-            <label>Bank Name</label>
+            <label data-tooltip="Name of your bank">Bank Name</label>
             <input type="text" [ngModel]="invoiceService.bank().bankName" (input)="updateWithCaps('bankName', $event)"
                 (blur)="validate('bankName', invoiceService.bank().bankName)" placeholder="e.g. HDFC BANK"
                 [class.error-input]="invoiceService.errors()['bankName']">
@@ -16,7 +16,7 @@
         </div>
 
         <div>
-            <label>Account Holder Name</label>
+            <label data-tooltip="Name as it appears in bank records">Account Holder Name</label>
             <input type="text" [ngModel]="invoiceService.bank().accountHolder"
                 (input)="updateWithCaps('accountHolder', $event)"
                 (blur)="validate('accountHolder', invoiceService.bank().accountHolder)"
@@ -27,7 +27,7 @@
         </div>
 
         <div>
-            <label>Account Number</label>
+            <label data-tooltip="Your bank account number">Account Number</label>
             <input type="number" inputmode="numeric" pattern="[0-9]*" [ngModel]="invoiceService.bank().accountNumber"
                 (input)="updateNumberOnly('accountNumber', $event)"
                 (blur)="validate('accountNumber', invoiceService.bank().accountNumber)"
@@ -39,7 +39,7 @@
         </div>
 
         <div>
-            <label>IFSC Code</label>
+            <label data-tooltip="11-character IFSC code">IFSC Code</label>
             <input type="text" [ngModel]="invoiceService.bank().ifsc" (input)="updateWithCaps('ifsc', $event)"
                 (blur)="validate('ifsc', invoiceService.bank().ifsc)" placeholder="e.g. HDFC0001234" maxlength="11"
                 [class.error-input]="invoiceService.errors()['ifsc']">
@@ -49,7 +49,7 @@
         </div>
 
         <div>
-            <label>Branch</label>
+            <label data-tooltip="Bank branch name">Branch</label>
             <input type="text" [ngModel]="invoiceService.bank().branch" (input)="updateWithCaps('branch', $event)"
                 (blur)="validate('branch', invoiceService.bank().branch)" placeholder="BRANCH NAME"
                 [class.error-input]="invoiceService.errors()['branch']">
@@ -59,7 +59,7 @@
         </div>
 
         <div>
-            <label>PAN Number</label>
+            <label data-tooltip="Permanent Account Number">PAN Number</label>
             <input type="text" [ngModel]="invoiceService.bank().pan" (input)="updateWithCaps('pan', $event)"
                 (blur)="validate('pan', invoiceService.bank().pan)" placeholder="ABCDE1234F" maxlength="10"
                 [class.error-input]="invoiceService.errors()['pan']">
