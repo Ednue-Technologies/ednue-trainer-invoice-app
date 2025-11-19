@@ -225,6 +225,11 @@ td {
   width: 100%;
 }
 
+/* Hide print invoice by default */
+#print-invoice {
+  display: none;
+}
+
 /* Print Styles */
 @media print {
 
