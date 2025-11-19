@@ -63,6 +63,30 @@ export class InvoiceService {
 
   updateCourse(data: Partial<CourseDetails>) {
     this.course.update(current => ({ ...current, ...data }));
+
+    // If totalStudents is updated, sync the students array
+    if (data.totalStudents !== undefined) {
+      this.students.update(current => {
+        const targetCount = data.totalStudents!;
+        if (current.length < targetCount) {
+          // Add new students
+          const newStudents = Array.from({ length: targetCount - current.length }, (_, i) => ({
+            id: current.length + i + 1,
+            name: '',
+            courseName: current.length > 0 ? current[0].courseName : '',
+            duration: current.length > 0 ? current[0].duration : '',
+            durationUnit: current.length > 0 ? current[0].durationUnit : 'days',
+            startDate: current.length > 0 ? current[0].startDate : '',
+            endDate: current.length > 0 ? current[0].endDate : ''
+          }));
+          return [...current, ...newStudents];
+        } else if (current.length > targetCount) {
+          // Remove students from the end
+          return current.slice(0, targetCount);
+        }
+        return current;
+      });
+    }
   }
 
   // Student Methods
@@ -71,10 +95,14 @@ export class InvoiceService {
       ...current,
       { id: current.length + 1, name: '', courseName: '', duration: '', durationUnit: 'days', startDate: '', endDate: '' }
     ]);
+    // Also update the course total students count to match
+    this.course.update(c => ({ ...c, totalStudents: this.students().length }));
   }
 
   removeStudent(index: number) {
     this.students.update(current => current.filter((_, i) => i !== index));
+    // Also update the course total students count to match
+    this.course.update(c => ({ ...c, totalStudents: this.students().length }));
   }
 
   updateStudent(index: number, data: Partial<Student>) {
@@ -99,6 +127,23 @@ export class InvoiceService {
         endDate: prev.endDate
       };
       return updated;
+    });
+  }
+
+  copyToAllStudents(sourceIndex: number) {
+    this.students.update(current => {
+      const source = current[sourceIndex];
+      return current.map((student, index) => {
+        if (index === sourceIndex) return student;
+        return {
+          ...student,
+          courseName: source.courseName,
+          duration: source.duration,
+          durationUnit: source.durationUnit,
+          startDate: source.startDate,
+          endDate: source.endDate
+        };
+      });
     });
   }
 
