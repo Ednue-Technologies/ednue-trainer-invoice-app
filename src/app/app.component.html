@@ -1,11 +1,7 @@
 <div class="min-h-screen p-4 md:p-8">
     <div class="max-w-5xl mx-auto">
         <header class="mb-8 text-center">
-            <h1
-                class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2">
-                Invoice Generator
-            </h1>
-            <p class="text-slate-500">Ednue Trainer Portal</p>
+            <img src="assets/ednue-logo.png" alt="Ednue Technologies" width="400" height="200">
         </header>
 
         <main>
@@ -14,10 +10,18 @@
             <app-student-details></app-student-details>
             <app-bank-details></app-bank-details>
 
-            <div class="flex justify-end mt-8 mb-12">
-                <button class="btn btn-primary text-lg px-8 py-4" (click)="generateInvoice()">
+            <div class="flex flex-wrap justify-end mt-8 mb-12 gap-4">
+                <button class="btn btn-secondary text-lg px-6 py-3" (click)="copyEmailToClipboard()">
+                    <lucide-icon [img]="Copy" class="w-5 h-5"></lucide-icon>
+                    Copy Email
+                </button>
+                <button class="btn btn-secondary text-lg px-6 py-3" (click)="downloadPdf()">
+                    <lucide-icon [img]="Download" class="w-5 h-5"></lucide-icon>
+                    Download PDF
+                </button>
+                <button class="btn btn-primary text-lg px-6 py-3" (click)="generateInvoice()">
                     <lucide-icon [img]="Send" class="w-5 h-5"></lucide-icon>
-                    Generate & Send Invoice
+                    Generate & Send
                 </button>
             </div>
         </main>
@@ -25,5 +29,155 @@
         <footer class="text-center text-slate-400 text-sm pb-8">
             &copy; {{ currentYear }} Ednue Technologies. All rights reserved.
         </footer>
+    </div>
+</div>
+
+<!-- Print Invoice Layout -->
+<div id="print-invoice" class="hidden">
+    <div class="p-8 max-w-[800px] mx-auto font-sans text-[#333]">
+        <!-- Header -->
+        <div class="flex justify-between items-start mb-12">
+            <div class="flex items-center">
+                <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="h-16 object-contain">
+            </div>
+            <div class="text-right">
+                <h2 class="text-[#ec4899] text-xl font-bold mb-2">Ednue Technologies</h2>
+                <p class="text-sm text-gray-600">
+                    Bangalore<br>
+                    Karnataka, India
+                </p>
+            </div>
+        </div>
+
+        <!-- Title -->
+        <div class="text-center mb-12">
+            <h1 class="text-[#ec4899] text-3xl font-normal tracking-wide uppercase">PROFORMA INVOICE</h1>
+            <div class="h-px bg-gray-200 w-1/3 mx-auto mt-4"></div>
+        </div>
+
+        <!-- Bill To / Ship To & Invoice Details -->
+        <div class="flex justify-between mb-12">
+            <div class="w-1/2">
+                <div class="mb-8">
+                    <h3 class="text-lg font-normal text-gray-800 mb-1">Bill To</h3>
+                    <p class="text-[#ec4899] font-bold text-lg mb-1">Ednue Technologies</p>
+                    <p class="text-gray-600 text-sm">
+                        Bangalore<br>
+                        Karnataka, India
+                    </p>
+                </div>
+
+                <div>
+                    <h3 class="text-lg font-normal text-gray-800 mb-1">Trainer</h3>
+                    <p class="text-[#ec4899] font-bold text-lg mb-1">{{ invoiceService.trainer().name }}</p>
+                    <p class="text-gray-600 text-sm">
+                        {{ invoiceService.trainer().email }}<br>
+                        {{ invoiceService.trainer().contact }}
+                    </p>
+                </div>
+            </div>
+
+            <div class="w-1/3">
+                <table class="w-full text-sm border-collapse">
+                    <tbody>
+                        <tr>
+                            <td class="bg-[#ec4899] text-white p-2 border border-white">Invoice#</td>
+                            <td class="bg-gray-50 p-2 border border-gray-200">INV-{{ invoiceService.trainer().date |
+                                date:'yyyyMMdd' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-[#ec4899] text-white p-2 border border-white">Invoice Date</td>
+                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date |
+                                date:'dd MMM yyyy' }}</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-[#ec4899] text-white p-2 border border-white">Terms</td>
+                            <td class="bg-gray-50 p-2 border border-gray-200">Due on Receipt</td>
+                        </tr>
+                        <tr>
+                            <td class="bg-[#ec4899] text-white p-2 border border-white">Due Date</td>
+                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date |
+                                date:'dd MMM yyyy' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <div class="mb-8">
+            <table class="w-full text-sm">
+                <thead>
+                    <tr class="bg-[#ec4899] text-white">
+                        <th class="p-3 text-center w-12 border-r border-white">#</th>
+                        <th class="p-3 text-left border-r border-white">Item & Description</th>
+                        <th class="p-3 text-right w-24 border-r border-white">Qty</th>
+                        <th class="p-3 text-right w-32 border-r border-white">Rate</th>
+                        <th class="p-3 text-right w-32">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="border-b border-gray-200">
+                        <td class="p-4 text-center align-top bg-gray-50">1</td>
+                        <td class="p-4 align-top bg-gray-50">
+                            <p class="font-bold text-gray-800 mb-1">{{ invoiceService.course().courseName }}</p>
+                            <p class="text-gray-500 text-xs">Training Services</p>
+                        </td>
+                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().totalStudents }}.00
+                        </td>
+                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().pricePerStudent |
+                            number:'1.2-2' }}</td>
+                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.totalAmount() | number:'1.2-2'
+                            }}</td>
+                    </tr>
+                    <!-- Empty rows for spacing if needed, or just one row as per current logic -->
+                    <tr class="h-24 bg-gray-50">
+                        <td colspan="5"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Footer / Totals -->
+        <div class="flex justify-end mb-12">
+            <div class="w-1/2">
+                <div class="flex justify-between mb-2 text-sm">
+                    <span class="text-gray-600">Sub Total</span>
+                    <span class="font-bold text-gray-800">{{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
+                </div>
+                <div class="flex justify-between mb-4 text-sm border-b border-gray-200 pb-4">
+                    <span class="text-gray-600">Tax Rate</span>
+                    <span class="font-bold text-gray-800">0.00%</span>
+                </div>
+                <div class="flex justify-between items-center text-lg">
+                    <span class="font-bold text-gray-800">Total</span>
+                    <span class="font-bold text-gray-800">${{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
+                </div>
+
+                <div class="mt-4 bg-[#ec4899] text-white p-3 flex justify-between items-center font-bold">
+                    <span>Balance Due</span>
+                    <span>${{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Terms -->
+        <div class="mb-8">
+            <h3 class="text-lg font-normal text-gray-800 mb-2">Terms & Conditions</h3>
+            <p class="text-gray-500 text-sm">
+                All payments must be made in full before the commencement of any design work.
+            </p>
+        </div>
+
+        <!-- Bank Details for Print -->
+        <div class="mt-8 pt-8 border-t border-gray-200">
+            <h3 class="text-lg font-normal text-gray-800 mb-2">Bank Details</h3>
+            <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                <div>Bank: {{ invoiceService.bank().bankName }}</div>
+                <div>Account: {{ invoiceService.bank().accountNumber }}</div>
+                <div>IFSC: {{ invoiceService.bank().ifsc }}</div>
+                <div>Holder: {{ invoiceService.bank().accountHolder }}</div>
+            </div>
+        </div>
     </div>
 </div>
