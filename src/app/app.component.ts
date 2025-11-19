@@ -5,7 +5,7 @@ import { BankDetailsComponent } from './components/bank-details/bank-details.com
 import { CourseDetailsComponent } from './components/course-details/course-details.component';
 import { StudentDetailsComponent } from './components/student-details/student-details.component';
 import { InvoiceService } from './services/invoice.service';
-import { LucideAngularModule, Send } from 'lucide-angular';
+import { LucideAngularModule, Send, Copy, Download } from 'lucide-angular';
 
 @Component({
     selector: 'app-root',
@@ -24,6 +24,8 @@ import { LucideAngularModule, Send } from 'lucide-angular';
 export class AppComponent {
     invoiceService = inject(InvoiceService);
     Send = Send;
+    Copy = Copy;
+    Download = Download;
     currentYear = new Date().getFullYear();
 
     generateInvoice() {
@@ -33,5 +35,32 @@ export class AppComponent {
         } else {
             alert('Please fix the validation errors before generating the invoice.');
         }
+    }
+
+    async copyEmailToClipboard() {
+        const htmlContent = this.invoiceService.generateHtmlEmail();
+        if (!htmlContent) {
+            alert('Please fix the validation errors before copying.');
+            return;
+        }
+
+        try {
+            const type = 'text/html';
+            const blob = new Blob([htmlContent], { type });
+            const data = [new ClipboardItem({ [type]: blob })];
+            await navigator.clipboard.write(data);
+            alert('Email content copied to clipboard! You can now paste it into your email client.');
+        } catch (err) {
+            console.error('Failed to copy: ', err);
+            alert('Failed to copy email content. Please try again.');
+        }
+    }
+
+    downloadPdf() {
+        if (!this.invoiceService.validate()) {
+            alert('Please fix the validation errors before downloading.');
+            return;
+        }
+        window.print();
     }
 }
