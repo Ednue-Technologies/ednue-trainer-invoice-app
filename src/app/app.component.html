@@ -1,11 +1,7 @@
 <div class="min-h-screen p-4 md:p-8">
     <div class="max-w-5xl mx-auto">
         <header class="mb-8 text-center">
-            <h1
-                class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2">
-                Invoice Generator
-            </h1>
-            <p class="text-slate-500">Ednue Trainer Portal</p>
+            <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="h-12 mx-auto mb-4">
         </header>
 
         <main>
@@ -41,9 +37,8 @@
     <div class="p-8 max-w-[800px] mx-auto font-sans text-[#333]">
         <!-- Header -->
         <div class="flex justify-between items-start mb-12">
-            <div class="w-24 h-24 rounded-full bg-[#ec4899] flex items-center justify-center text-white text-4xl font-bold">
-                <!-- Placeholder Logo -->
-                Z
+            <div class="flex items-center">
+                <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="h-16 object-contain">
             </div>
             <div class="text-right">
                 <h2 class="text-[#ec4899] text-xl font-bold mb-2">Ednue Technologies</h2>
@@ -71,7 +66,7 @@
                         Karnataka, India
                     </p>
                 </div>
-                
+
                 <div>
                     <h3 class="text-lg font-normal text-gray-800 mb-1">Trainer</h3>
                     <p class="text-[#ec4899] font-bold text-lg mb-1">{{ invoiceService.trainer().name }}</p>
@@ -87,11 +82,13 @@
                     <tbody>
                         <tr>
                             <td class="bg-[#ec4899] text-white p-2 border border-white">Invoice#</td>
-                            <td class="bg-gray-50 p-2 border border-gray-200">INV-{{ invoiceService.trainer().date | date:'yyyyMMdd' }}</td>
+                            <td class="bg-gray-50 p-2 border border-gray-200">INV-{{ invoiceService.trainer().date |
+                                date:'yyyyMMdd' }}</td>
                         </tr>
                         <tr>
                             <td class="bg-[#ec4899] text-white p-2 border border-white">Invoice Date</td>
-                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date | date:'dd MMM yyyy' }}</td>
+                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date |
+                                date:'dd MMM yyyy' }}</td>
                         </tr>
                         <tr>
                             <td class="bg-[#ec4899] text-white p-2 border border-white">Terms</td>
@@ -99,7 +96,8 @@
                         </tr>
                         <tr>
                             <td class="bg-[#ec4899] text-white p-2 border border-white">Due Date</td>
-                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date | date:'dd MMM yyyy' }}</td>
+                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date |
+                                date:'dd MMM yyyy' }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -125,9 +123,12 @@
                             <p class="font-bold text-gray-800 mb-1">{{ invoiceService.course().courseName }}</p>
                             <p class="text-gray-500 text-xs">Training Services</p>
                         </td>
-                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().totalStudents }}.00</td>
-                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().pricePerStudent | number:'1.2-2' }}</td>
-                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.totalAmount() | number:'1.2-2' }}</td>
+                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().totalStudents }}.00
+                        </td>
+                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().pricePerStudent |
+                            number:'1.2-2' }}</td>
+                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.totalAmount() | number:'1.2-2'
+                            }}</td>
                     </tr>
                     <!-- Empty rows for spacing if needed, or just one row as per current logic -->
                     <tr class="h-24 bg-gray-50">
@@ -152,7 +153,7 @@
                     <span class="font-bold text-gray-800">Total</span>
                     <span class="font-bold text-gray-800">${{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
                 </div>
-                
+
                 <div class="mt-4 bg-[#ec4899] text-white p-3 flex justify-between items-center font-bold">
                     <span>Balance Due</span>
                     <span>${{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
@@ -167,16 +168,16 @@
                 All payments must be made in full before the commencement of any design work.
             </p>
         </div>
-        
+
         <!-- Bank Details for Print -->
         <div class="mt-8 pt-8 border-t border-gray-200">
-             <h3 class="text-lg font-normal text-gray-800 mb-2">Bank Details</h3>
-             <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                 <div>Bank: {{ invoiceService.bank().bankName }}</div>
-                 <div>Account: {{ invoiceService.bank().accountNumber }}</div>
-                 <div>IFSC: {{ invoiceService.bank().ifsc }}</div>
-                 <div>Holder: {{ invoiceService.bank().accountHolder }}</div>
-             </div>
+            <h3 class="text-lg font-normal text-gray-800 mb-2">Bank Details</h3>
+            <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
+                <div>Bank: {{ invoiceService.bank().bankName }}</div>
+                <div>Account: {{ invoiceService.bank().accountNumber }}</div>
+                <div>IFSC: {{ invoiceService.bank().ifsc }}</div>
+                <div>Holder: {{ invoiceService.bank().accountHolder }}</div>
+            </div>
         </div>
     </div>
 </div>
