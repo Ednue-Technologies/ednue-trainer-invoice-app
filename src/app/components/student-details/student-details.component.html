@@ -1,0 +1,82 @@
+<div class="card">
+    <div class="flex justify-between items-center mb-4">
+        <h2 class="section-title mb-0">
+            <lucide-icon [img]="Users" class="w-6 h-6"></lucide-icon>
+            Student Details
+        </h2>
+        <button class="btn btn-secondary btn-sm" (click)="addStudent()">
+            <lucide-icon [img]="Plus" class="w-4 h-4"></lucide-icon>
+            Add Student
+        </button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50px;">#</th>
+                    <th>Student Name</th>
+                    <th>Course</th>
+                    <th>Duration</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th style="width: 100px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let student of invoiceService.students(); let i = index; trackBy: trackByIndex">
+                    <td class="text-center">{{ i + 1 }}</td>
+                    <td>
+                        <input type="text" [ngModel]="student.name" (ngModelChange)="update(i, 'name', $event)"
+                            placeholder="Name" class="table-input">
+                    </td>
+                    <td>
+                        <input type="text" [ngModel]="student.courseName"
+                            (ngModelChange)="update(i, 'courseName', $event)" placeholder="e.g. Full Stack Development"
+                            class="table-input" style="width: 100%;" />
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 0.5rem; align-items: center;">
+                            <input type="number" [ngModel]="student.duration"
+                                (ngModelChange)="update(i, 'duration', $event)" placeholder="0" class="table-input"
+                                style="width: 60px;" min="0">
+                            <select [ngModel]="student.durationUnit" (ngModelChange)="update(i, 'durationUnit', $event)"
+                                class="table-select">
+                                <option value="hours">Hours</option>
+                                <option value="days">Days</option>
+                                <option value="weeks">Weeks</option>
+                                <option value="months">Months</option>
+                            </select>
+                        </div>
+                    </td>
+                    <td>
+                        <input type="date" [ngModel]="student.startDate"
+                            (ngModelChange)="update(i, 'startDate', $event)" class="table-input">
+                    </td>
+                    <td>
+                        <input type="date" [ngModel]="student.endDate" (ngModelChange)="update(i, 'endDate', $event)"
+                            (blur)="validateEndDate(i, student.endDate)" class="table-input"
+                            [class.error-input]="invoiceService.errors()['studentEndDate_' + i]">
+                        <span class="error-msg" *ngIf="invoiceService.errors()['studentEndDate_' + i]"
+                            style="font-size: 0.7rem;">
+                            {{ invoiceService.errors()['studentEndDate_' + i] }}
+                        </span>
+                    </td>
+                    <td>
+                        <div class="flex gap-2 justify-center">
+                            <button *ngIf="i > 0" class="btn-icon text-blue-500" title="Copy Previous"
+                                (click)="copyPrevious(i)"
+                                [disabled]="invoiceService.errors()['studentEndDate_' + (i-1)]">
+                                <lucide-icon [img]="Copy" class="w-4 h-4"></lucide-icon>
+                            </button>
+                            <button *ngIf="invoiceService.students().length > 1" class="btn-icon text-red-500"
+                                title="Remove" (click)="removeStudent(i)">
+                                <lucide-icon [img]="Trash2" class="w-4 h-4"></lucide-icon>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

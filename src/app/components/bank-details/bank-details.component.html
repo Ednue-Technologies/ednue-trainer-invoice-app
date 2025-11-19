@@ -1,0 +1,71 @@
+<div class="card">
+    <h2 class="section-title">
+        <lucide-icon [img]="Landmark" class="w-6 h-6"></lucide-icon>
+        Bank Details
+    </h2>
+
+    <div class="grid-2">
+        <div>
+            <label>Bank Name</label>
+            <input type="text" [ngModel]="invoiceService.bank().bankName" (input)="updateWithCaps('bankName', $event)"
+                (blur)="validate('bankName', invoiceService.bank().bankName)" placeholder="e.g. HDFC BANK"
+                [class.error-input]="invoiceService.errors()['bankName']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['bankName']">
+                {{ invoiceService.errors()['bankName'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>Account Holder Name</label>
+            <input type="text" [ngModel]="invoiceService.bank().accountHolder"
+                (input)="updateWithCaps('accountHolder', $event)"
+                (blur)="validate('accountHolder', invoiceService.bank().accountHolder)"
+                placeholder="NAME AS PER BANK RECORDS" [class.error-input]="invoiceService.errors()['accountHolder']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['accountHolder']">
+                {{ invoiceService.errors()['accountHolder'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>Account Number</label>
+            <input type="number" inputmode="numeric" pattern="[0-9]*" [ngModel]="invoiceService.bank().accountNumber"
+                (input)="updateNumberOnly('accountNumber', $event)"
+                (blur)="validate('accountNumber', invoiceService.bank().accountNumber)"
+                placeholder="Enter Account Number" maxlength="18"
+                [class.error-input]="invoiceService.errors()['accountNumber']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['accountNumber']">
+                {{ invoiceService.errors()['accountNumber'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>IFSC Code</label>
+            <input type="text" [ngModel]="invoiceService.bank().ifsc" (input)="updateWithCaps('ifsc', $event)"
+                (blur)="validate('ifsc', invoiceService.bank().ifsc)" placeholder="e.g. HDFC0001234" maxlength="11"
+                [class.error-input]="invoiceService.errors()['ifsc']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['ifsc']">
+                {{ invoiceService.errors()['ifsc'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>Branch</label>
+            <input type="text" [ngModel]="invoiceService.bank().branch" (input)="updateWithCaps('branch', $event)"
+                (blur)="validate('branch', invoiceService.bank().branch)" placeholder="BRANCH NAME"
+                [class.error-input]="invoiceService.errors()['branch']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['branch']">
+                {{ invoiceService.errors()['branch'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>PAN Number</label>
+            <input type="text" [ngModel]="invoiceService.bank().pan" (input)="updateWithCaps('pan', $event)"
+                (blur)="validate('pan', invoiceService.bank().pan)" placeholder="ABCDE1234F" maxlength="10"
+                [class.error-input]="invoiceService.errors()['pan']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['pan']">
+                {{ invoiceService.errors()['pan'] }}
+            </span>
+        </div>
+    </div>
+</div>

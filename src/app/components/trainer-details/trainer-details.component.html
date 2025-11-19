@@ -1,0 +1,58 @@
+<div class="card">
+    <h2 class="section-title">
+        <lucide-icon [img]="User" class="w-6 h-6"></lucide-icon>
+        Trainer Details
+    </h2>
+
+    <div class="grid-2">
+        <div>
+            <label>Trainer Name</label>
+            <div class="input-wrapper">
+                <input type="text" [ngModel]="invoiceService.trainer().name" (ngModelChange)="update('name', $event)"
+                    (blur)="validate('trainerName', invoiceService.trainer().name)" placeholder="Enter your full name"
+                    [class.error-input]="invoiceService.errors()['trainerName']">
+                <span class="error-msg" *ngIf="invoiceService.errors()['trainerName']">
+                    {{ invoiceService.errors()['trainerName'] }}
+                </span>
+            </div>
+        </div>
+
+        <div>
+            <label>Email ID</label>
+            <input type="email" [ngModel]="invoiceService.trainer().email" (ngModelChange)="update('email', $event)"
+                (blur)="validate('trainerEmail', invoiceService.trainer().email)" placeholder="email@example.com"
+                [class.error-input]="invoiceService.errors()['trainerEmail']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['trainerEmail']">
+                {{ invoiceService.errors()['trainerEmail'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>Contact Number</label>
+            <div style="position: relative; display: flex; align-items: center;">
+                <span style="position: absolute; left: 1rem; font-size: 0.95rem; color: #64748b; pointer-events: none;">
+                    🇮🇳 +91
+                </span>
+                <input type="tel" [ngModel]="invoiceService.trainer().contact"
+                    (ngModelChange)="update('contact', $event)"
+                    (blur)="validate('trainerContact', invoiceService.trainer().contact)" placeholder="98765 43210"
+                    maxlength="10" style="padding-left: 5rem;"
+                    [class.error-input]="invoiceService.errors()['trainerContact']">
+            </div>
+            <span class="error-msg" *ngIf="invoiceService.errors()['trainerContact']">
+                {{ invoiceService.errors()['trainerContact'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>Invoice Date</label>
+            <input type="date" [ngModel]="invoiceService.trainer().date" (ngModelChange)="update('date', $event)"
+                (blur)="validate('trainerDate', invoiceService.trainer().date)"
+                [class.error-input]="invoiceService.errors()['trainerDate']" readonly
+                style="background-color: #f8fafc; cursor: not-allowed;">
+            <span class="error-msg" *ngIf="invoiceService.errors()['trainerDate']">
+                {{ invoiceService.errors()['trainerDate'] }}
+            </span>
+        </div>
+    </div>
+</div>

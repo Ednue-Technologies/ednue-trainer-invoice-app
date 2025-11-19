@@ -1,0 +1,29 @@
+<div class="min-h-screen p-4 md:p-8">
+    <div class="max-w-5xl mx-auto">
+        <header class="mb-8 text-center">
+            <h1
+                class="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary mb-2">
+                Invoice Generator
+            </h1>
+            <p class="text-slate-500">Ednue Trainer Portal</p>
+        </header>
+
+        <main>
+            <app-trainer-details></app-trainer-details>
+            <app-course-details></app-course-details>
+            <app-student-details></app-student-details>
+            <app-bank-details></app-bank-details>
+
+            <div class="flex justify-end mt-8 mb-12">
+                <button class="btn btn-primary text-lg px-8 py-4" (click)="generateInvoice()">
+                    <lucide-icon [img]="Send" class="w-5 h-5"></lucide-icon>
+                    Generate & Send Invoice
+                </button>
+            </div>
+        </main>
+
+        <footer class="text-center text-slate-400 text-sm pb-8">
+            &copy; {{ currentYear }} Ednue Technologies. All rights reserved.
+        </footer>
+    </div>
+</div>

@@ -1,0 +1,42 @@
+<div class="card">
+    <h2 class="section-title">
+        <lucide-icon [img]="BookOpen" class="w-6 h-6"></lucide-icon>
+        Course Details
+    </h2>
+
+    <div class="grid-2">
+        <div>
+            <label>Course Name</label>
+            <input type="text" [ngModel]="invoiceService.course().courseName"
+                (ngModelChange)="update('courseName', $event)"
+                (blur)="validate('courseName', invoiceService.course().courseName)"
+                placeholder="e.g. Full Stack Development" [class.error-input]="invoiceService.errors()['courseName']">
+            <span class="error-msg" *ngIf="invoiceService.errors()['courseName']">
+                {{ invoiceService.errors()['courseName'] }}
+            </span>
+        </div>
+
+        <div>
+            <label>Total Students</label>
+            <div class="input-wrapper">
+                <input type="number" [ngModel]="invoiceService.course().totalStudents"
+                    (ngModelChange)="update('totalStudents', +$event)" min="0">
+            </div>
+        </div>
+
+        <div>
+            <label>Price Per Student (₹)</label>
+            <input type="number" [ngModel]="invoiceService.course().pricePerStudent"
+                (ngModelChange)="update('pricePerStudent', +$event)" min="0">
+        </div>
+
+        <div>
+            <label>Total Amount (₹)</label>
+            <div
+                class="flex items-center gap-2 p-3 bg-slate-100 rounded-lg border border-slate-200 font-bold text-lg text-primary">
+                <lucide-icon [img]="Calculator" class="w-5 h-5"></lucide-icon>
+                {{ invoiceService.totalAmount() | currency:'INR' }}
+            </div>
+        </div>
+    </div>
+</div>
