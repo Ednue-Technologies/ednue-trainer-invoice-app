@@ -64,12 +64,8 @@
                     </td>
                     <td>
                         <div class="flex gap-2 justify-center">
-                            <button *ngIf="i > 0" class="btn-icon text-blue-500" title="Copy Previous"
-                                (click)="copyPrevious(i)"
-                                [disabled]="invoiceService.errors()['studentEndDate_' + (i-1)]">
-                                <lucide-icon [img]="Copy" class="w-4 h-4"></lucide-icon>
-                            </button>
-                            <button class="btn-icon text-green-600" title="Copy to All" (click)="copyToAll(i)">
+                            <button *ngIf="i === 0" class="btn-icon text-green-600" title="Copy to All"
+                                (click)="copyToAll(i)">
                                 <lucide-icon [img]="CopyCheck" class="w-4 h-4"></lucide-icon>
                             </button>
                             <button *ngIf="invoiceService.students().length > 1" class="btn-icon text-red-500"
