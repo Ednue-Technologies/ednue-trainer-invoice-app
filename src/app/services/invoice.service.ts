@@ -63,6 +63,30 @@ export class InvoiceService {
 
   updateCourse(data: Partial<CourseDetails>) {
     this.course.update(current => ({ ...current, ...data }));
+
+    // If totalStudents is updated, sync the students array
+    if (data.totalStudents !== undefined) {
+      this.students.update(current => {
+        const targetCount = data.totalStudents!;
+        if (current.length < targetCount) {
+          // Add new students
+          const newStudents = Array.from({ length: targetCount - current.length }, (_, i) => ({
+            id: current.length + i + 1,
+            name: '',
+            courseName: current.length > 0 ? current[0].courseName : '',
+            duration: current.length > 0 ? current[0].duration : '',
+            durationUnit: current.length > 0 ? current[0].durationUnit : 'days',
+            startDate: current.length > 0 ? current[0].startDate : '',
+            endDate: current.length > 0 ? current[0].endDate : ''
+          }));
+          return [...current, ...newStudents];
+        } else if (current.length > targetCount) {
+          // Remove students from the end
+          return current.slice(0, targetCount);
+        }
+        return current;
+      });
+    }
   }
 
   // Student Methods
@@ -71,10 +95,14 @@ export class InvoiceService {
       ...current,
       { id: current.length + 1, name: '', courseName: '', duration: '', durationUnit: 'days', startDate: '', endDate: '' }
     ]);
+    // Also update the course total students count to match
+    this.course.update(c => ({ ...c, totalStudents: this.students().length }));
   }
 
   removeStudent(index: number) {
     this.students.update(current => current.filter((_, i) => i !== index));
+    // Also update the course total students count to match
+    this.course.update(c => ({ ...c, totalStudents: this.students().length }));
   }
 
   updateStudent(index: number, data: Partial<Student>) {
@@ -99,6 +127,23 @@ export class InvoiceService {
         endDate: prev.endDate
       };
       return updated;
+    });
+  }
+
+  copyToAllStudents(sourceIndex: number) {
+    this.students.update(current => {
+      const source = current[sourceIndex];
+      return current.map((student, index) => {
+        if (index === sourceIndex) return student;
+        return {
+          ...student,
+          courseName: source.courseName,
+          duration: source.duration,
+          durationUnit: source.durationUnit,
+          startDate: source.startDate,
+          endDate: source.endDate
+        };
+      });
     });
   }
 
@@ -214,8 +259,6 @@ export class InvoiceService {
     const c = this.course();
     const s = this.students();
     const total = this.totalAmount();
-    const tds = Math.round(total * 0.1);
-    const net = total - tds;
 
     // Subject format: "<Course Name> Trainer Invoice - <Trainer Name> - <Date>"
     const subject = `${c.courseName} Trainer Invoice - ${t.name} - ${t.date}`;
@@ -223,6 +266,14 @@ export class InvoiceService {
     // Body follows the exact template the user provided (plain‑text for mailto)
     const body = `Hello Sir/Madam,
 Please find the trainer invoice details below.
+
+Bank Account Details
+*Bank Name:* ${b.bankName}
+*Account Holder Name:* ${b.accountHolder}
+*Account Number:* ${b.accountNumber}
+*IFSC Code:* ${b.ifsc}
+*Bank Branch:* ${b.branch}
+*PAN Number:* ${b.pan}
 
 Trainer Details
 *Trainer Name:* ${t.name}
@@ -234,9 +285,7 @@ Course Details
 S. No Course Name Total Students Price Per Student Total
 1 ${c.courseName} ${c.totalStudents} ${c.pricePerStudent} ${total}
 
-*Grand Total (A):* ${total}
-*10% TDS (B):* ${tds}
-*Net Amount for Bank Transfer (A - B):* ${net}
+*Grand Total:* ${total}
 
 Student Details
 S.No Student Name Course Name Duration Start Date End Date
@@ -244,18 +293,119 @@ ${s
         .map((stu, i) => `${i + 1} ${stu.name} ${stu.courseName} ${stu.duration} ${stu.durationUnit} ${stu.startDate} ${stu.endDate}`)
         .join('\n')}
 
-Bank Account Details
-*Bank Name:* ${b.bankName}
-*Account Holder Name:* ${b.accountHolder}
-*Account Number:* ${b.accountNumber}
-*IFSC Code:* ${b.ifsc}
-*Bank Branch:* ${b.branch}
-*PAN Number:* ${b.pan}
-
 Thanks & Regards,
 ${t.name}`;
 
     return `mailto:ednuetech@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+  }
+
+  generateHtmlEmail() {
+    if (!this.validate()) return null;
+
+    const t = this.trainer();
+    const b = this.bank();
+    const c = this.course();
+    const s = this.students();
+    const total = this.totalAmount();
+
+    const containerStyle = 'font-family: "Georgia", serif; color: #333; max-width: 800px; margin: 0 auto; border: 1px solid #e0e0e0; padding: 40px; background-color: #ffffff;';
+    const headerStyle = 'border-bottom: 2px solid #333; padding-bottom: 10px; margin-bottom: 30px;';
+    const sectionTitleStyle = 'font-size: 18px; font-weight: bold; color: #ec4899; margin-top: 30px; margin-bottom: 15px; border-bottom: 1px solid #eee; padding-bottom: 5px;';
+    const tableStyle = 'width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px;';
+    const thStyle = 'border: 1px solid #ddd; padding: 12px; background-color: #f8f9fa; text-align: left; font-weight: bold; color: #495057;';
+    const tdStyle = 'border: 1px solid #ddd; padding: 12px; text-align: left; color: #212529;';
+    const totalStyle = 'background-color: #e9ecef; font-weight: bold; padding: 15px; text-align: right; font-size: 16px; border-radius: 4px; margin-top: 20px;';
+
+    const html = `
+      <div style="${containerStyle}">
+        <div style="${headerStyle}">
+          <h2 style="margin: 0; color: #ec4899;">Trainer Invoice</h2>
+          <p style="margin: 5px 0 0; color: #666; font-size: 14px;">${c.courseName}</p>
+        </div>
+
+        <p style="font-size: 15px; line-height: 1.6;">Hello Sir/Madam,</p>
+        <p style="font-size: 15px; line-height: 1.6;">Please find the trainer invoice details below.</p>
+        
+        <h3 style="${sectionTitleStyle}">Bank Account Details</h3>
+        <div style="background-color: #f8f9fa; padding: 15px; border-radius: 4px; font-size: 14px; line-height: 1.8;">
+          <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+            <div><strong>Bank Name:</strong> ${b.bankName}</div>
+            <div><strong>Account Holder:</strong> ${b.accountHolder}</div>
+            <div><strong>Account Number:</strong> ${b.accountNumber}</div>
+            <div><strong>IFSC Code:</strong> ${b.ifsc}</div>
+            <div><strong>Branch:</strong> ${b.branch}</div>
+            <div><strong>PAN Number:</strong> ${b.pan}</div>
+          </div>
+        </div>
+
+        <h3 style="${sectionTitleStyle}">Trainer Details</h3>
+        <div style="font-size: 14px; line-height: 1.8;">
+          <strong>Name:</strong> ${t.name}<br>
+          <strong>Contact:</strong> ${t.contact}<br>
+          <strong>Email:</strong> ${t.email}<br>
+          <strong>Date:</strong> ${t.date}
+        </div>
+
+        <h3 style="${sectionTitleStyle}">Course Details</h3>
+        <table style="${tableStyle}">
+          <thead>
+            <tr>
+              <th style="${thStyle}">S. No</th>
+              <th style="${thStyle}">Course Name</th>
+              <th style="${thStyle}">Total Students</th>
+              <th style="${thStyle}">Price Per Student</th>
+              <th style="${thStyle}">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td style="${tdStyle}">1</td>
+              <td style="${tdStyle}">${c.courseName}</td>
+              <td style="${tdStyle}">${c.totalStudents}</td>
+              <td style="${tdStyle}">${c.pricePerStudent}</td>
+              <td style="${tdStyle}">${total}</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="${totalStyle}">
+          Grand Total: ${total}
+        </div>
+
+        <h3 style="${sectionTitleStyle}">Student Details</h3>
+        <table style="${tableStyle}">
+          <thead>
+            <tr>
+              <th style="${thStyle}">S.No</th>
+              <th style="${thStyle}">Student Name</th>
+              <th style="${thStyle}">Course Name</th>
+              <th style="${thStyle}">Duration</th>
+              <th style="${thStyle}">Start Date</th>
+              <th style="${thStyle}">End Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${s.map((stu, i) => `
+              <tr style="${i % 2 === 0 ? '' : 'background-color: #f9f9f9;'}">
+                <td style="${tdStyle}">${i + 1}</td>
+                <td style="${tdStyle}">${stu.name}</td>
+                <td style="${tdStyle}">${stu.courseName}</td>
+                <td style="${tdStyle}">${stu.duration} ${stu.durationUnit}</td>
+                <td style="${tdStyle}">${stu.startDate}</td>
+                <td style="${tdStyle}">${stu.endDate}</td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+
+        <p style="margin-top: 40px; font-size: 15px; border-top: 1px solid #eee; padding-top: 20px;">
+          Thanks & Regards,<br>
+          <strong>${t.name}</strong>
+        </p>
+      </div>
+    `;
+
+    return html;
   }
 }
 
