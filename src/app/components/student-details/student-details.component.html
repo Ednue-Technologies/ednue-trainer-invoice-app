@@ -69,6 +69,9 @@
                                 [disabled]="invoiceService.errors()['studentEndDate_' + (i-1)]">
                                 <lucide-icon [img]="Copy" class="w-4 h-4"></lucide-icon>
                             </button>
+                            <button class="btn-icon text-green-600" title="Copy to All" (click)="copyToAll(i)">
+                                <lucide-icon [img]="CopyCheck" class="w-4 h-4"></lucide-icon>
+                            </button>
                             <button *ngIf="invoiceService.students().length > 1" class="btn-icon text-red-500"
                                 title="Remove" (click)="removeStudent(i)">
                                 <lucide-icon [img]="Trash2" class="w-4 h-4"></lucide-icon>
