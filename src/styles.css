@@ -390,7 +390,7 @@ td {
   }
 
   .dark input[type="date"]::-webkit-calendar-picker-indicator {
-    filter: invert(1) brightness(100%);
+    filter: brightness(0) invert(1);
     cursor: pointer;
   }
 
