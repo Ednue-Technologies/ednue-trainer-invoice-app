@@ -50,6 +50,14 @@ export class InvoiceService {
     return c.totalStudents * c.pricePerStudent;
   });
 
+  tdsAmount = computed(() => {
+    return this.totalAmount() * 0.10;
+  });
+
+  netAmount = computed(() => {
+    return this.totalAmount() - this.tdsAmount();
+  });
+
   constructor() { }
 
   // Update Methods
@@ -145,6 +153,45 @@ export class InvoiceService {
         };
       });
     });
+  }
+
+  populateAllDummyData(count: number) {
+    // Trainer Details
+    this.trainer.set({
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      contact: '9876543210',
+      date: new Date().toISOString().split('T')[0]
+    });
+
+    // Bank Details
+    this.bank.set({
+      bankName: 'HDFC Bank',
+      accountHolder: 'John Doe',
+      accountNumber: '1234567890',
+      ifsc: 'HDFC0001234',
+      branch: 'Indiranagar, Bangalore',
+      pan: 'ABCDE1234F'
+    });
+
+    // Course Details
+    this.course.set({
+      courseName: 'Full Stack Development',
+      totalStudents: count,
+      pricePerStudent: 1000
+    });
+
+    // Student Details
+    const dummyStudents: Student[] = Array.from({ length: count }, (_, i) => ({
+      id: i + 1,
+      name: `Student ${i + 1}`,
+      courseName: 'Full Stack Development',
+      duration: '30',
+      durationUnit: 'days',
+      startDate: '2023-11-01',
+      endDate: '2023-11-30'
+    }));
+    this.students.set(dummyStudents);
   }
 
   // Validation State

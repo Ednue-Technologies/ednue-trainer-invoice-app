@@ -31,6 +31,12 @@
                     <lucide-icon [img]="Send" class="w-4 h-4"></lucide-icon>
                     Generate & Send
                 </button>
+                <button *ngIf="populateDummy"
+                    class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full"
+                    (click)="populateDummyData()"
+                    [attr.data-tooltip]="'Add ' + dummyStudentCount + ' dummy students & fill all forms'">
+                    Populate Dummy Data
+                </button>
             </div>
         </main>
 
@@ -42,150 +48,156 @@
 
 <!-- Print Invoice Layout -->
 <div id="print-invoice" class="hidden">
-    <div class="p-8 max-w-[800px] mx-auto font-sans text-[#333]">
+    <div class="print-frame"></div>
+    <div class="print-container">
         <!-- Header -->
-        <div class="flex justify-between items-start mb-12">
-            <div class="flex items-center">
-                <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="h-16 object-contain">
-            </div>
-            <div class="text-right">
-                <h2 class="text-[#ec4899] text-xl font-bold mb-2">Ednue Technologies</h2>
-                <p class="text-sm text-gray-600">
-                    Bangalore<br>
-                    Karnataka, India
-                </p>
-            </div>
+        <div class="print-header">
+            <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="print-logo">
+            <div class="print-title">TRAINER INVOICE</div>
+            <div style="text-align: right; font-weight: bold;">{{ invoiceService.trainer().date | date:'MMMM dd, yyyy'
+                }}</div>
         </div>
 
-        <!-- Title -->
-        <div class="text-center mb-12">
-            <h1 class="text-[#ec4899] text-3xl font-normal tracking-wide uppercase">PROFORMA INVOICE</h1>
-            <div class="h-px bg-gray-200 w-1/3 mx-auto mt-4"></div>
-        </div>
-
-        <!-- Bill To / Ship To & Invoice Details -->
-        <div class="flex justify-between mb-12">
-            <div class="w-1/2">
-                <div class="mb-8">
-                    <h3 class="text-lg font-normal text-gray-800 mb-1">Bill To</h3>
-                    <p class="text-[#ec4899] font-bold text-lg mb-1">Ednue Technologies</p>
-                    <p class="text-gray-600 text-sm">
-                        Bangalore<br>
-                        Karnataka, India
-                    </p>
-                </div>
-
-                <div>
-                    <h3 class="text-lg font-normal text-gray-800 mb-1">Trainer</h3>
-                    <p class="text-[#ec4899] font-bold text-lg mb-1">{{ invoiceService.trainer().name }}</p>
-                    <p class="text-gray-600 text-sm">
-                        {{ invoiceService.trainer().email }}<br>
-                        {{ invoiceService.trainer().contact }}
-                    </p>
-                </div>
+        <!-- From / To -->
+        <div class="print-grid">
+            <div>
+                <div style="font-weight: bold; margin-bottom: 5px;">From:</div>
+                <div>{{ invoiceService.trainer().name }}</div>
+                <div>{{ invoiceService.trainer().email }}</div>
+                <div>{{ invoiceService.trainer().contact }}</div>
+                <div>{{ invoiceService.course().courseName }}</div>
             </div>
-
-            <div class="w-1/3">
-                <table class="w-full text-sm border-collapse">
-                    <tbody>
-                        <tr>
-                            <td class="bg-[#ec4899] text-white p-2 border border-white">Invoice#</td>
-                            <td class="bg-gray-50 p-2 border border-gray-200">INV-{{ invoiceService.trainer().date |
-                                date:'yyyyMMdd' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="bg-[#ec4899] text-white p-2 border border-white">Invoice Date</td>
-                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date |
-                                date:'dd MMM yyyy' }}</td>
-                        </tr>
-                        <tr>
-                            <td class="bg-[#ec4899] text-white p-2 border border-white">Terms</td>
-                            <td class="bg-gray-50 p-2 border border-gray-200">Due on Receipt</td>
-                        </tr>
-                        <tr>
-                            <td class="bg-[#ec4899] text-white p-2 border border-white">Due Date</td>
-                            <td class="bg-gray-50 p-2 border border-gray-200">{{ invoiceService.trainer().date |
-                                date:'dd MMM yyyy' }}</td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div>
+                <div style="font-weight: bold; margin-bottom: 5px;">To:</div>
+                <div style="font-weight: bold;">Ednue Technologies Private Limited</div>
+                <div>OMR, Opposite Marina Mall, Egattur, Chennai</div>
+                <div>Phone: 99622 88885 | 93637 08885</div>
+                <div>Email: info@ednue.com</div>
             </div>
         </div>
 
-        <!-- Items Table -->
-        <div class="mb-8">
-            <table class="w-full text-sm">
-                <thead>
-                    <tr class="bg-[#ec4899] text-white">
-                        <th class="p-3 text-center w-12 border-r border-white">#</th>
-                        <th class="p-3 text-left border-r border-white">Item & Description</th>
-                        <th class="p-3 text-right w-24 border-r border-white">Qty</th>
-                        <th class="p-3 text-right w-32 border-r border-white">Rate</th>
-                        <th class="p-3 text-right w-32">Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr class="border-b border-gray-200">
-                        <td class="p-4 text-center align-top bg-gray-50">1</td>
-                        <td class="p-4 align-top bg-gray-50">
-                            <p class="font-bold text-gray-800 mb-1">{{ invoiceService.course().courseName }}</p>
-                            <p class="text-gray-500 text-xs">Training Services</p>
-                        </td>
-                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().totalStudents }}.00
-                        </td>
-                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.course().pricePerStudent |
-                            number:'1.2-2' }}</td>
-                        <td class="p-4 text-right align-top bg-gray-50">{{ invoiceService.totalAmount() | number:'1.2-2'
-                            }}</td>
-                    </tr>
-                    <!-- Empty rows for spacing if needed, or just one row as per current logic -->
-                    <tr class="h-24 bg-gray-50">
-                        <td colspan="5"></td>
-                    </tr>
-                </tbody>
-            </table>
+        <!-- Account Details -->
+        <div class="print-section-title">ACCOUNT DETAILS</div>
+        <table class="print-table">
+            <tr>
+                <td style="width: 30%;">ACCOUNT HOLDER NAME</td>
+                <td>{{ invoiceService.bank().accountHolder }}</td>
+            </tr>
+            <tr>
+                <td>ACCOUNT NUMBER</td>
+                <td>{{ invoiceService.bank().accountNumber }}</td>
+            </tr>
+            <tr>
+                <td>IFSC CODE</td>
+                <td>{{ invoiceService.bank().ifsc }}</td>
+            </tr>
+            <tr>
+                <td>BANK NAME</td>
+                <td>{{ invoiceService.bank().bankName }}</td>
+            </tr>
+            <tr>
+                <td>BRANCH</td>
+                <td>{{ invoiceService.bank().branch }}</td>
+            </tr>
+            <tr>
+                <td>PAN</td>
+                <td>{{ invoiceService.bank().pan }}</td>
+            </tr>
+        </table>
+
+        <!-- Course Details -->
+        <div class="print-section-title">COURSE DETAILS</div>
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>S.NO</th>
+                    <th>COURSE NAME</th>
+                    <th>TOTAL STUDENTS</th>
+                    <th>Price Per Head (₹)</th>
+                    <th>Total Price (₹)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="center">1</td>
+                    <td class="center">{{ invoiceService.course().courseName }}</td>
+                    <td class="center">{{ invoiceService.course().totalStudents }}</td>
+                    <td class="center">{{ invoiceService.course().pricePerStudent }}</td>
+                    <td class="center">{{ invoiceService.totalAmount() | number:'1.0-0' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="center" style="background-color: #ffc0cb4d;">TDS (10%)</td>
+                    <td class="center">- {{ invoiceService.tdsAmount() | number:'1.0-0' }}</td>
+                </tr>
+                <tr>
+                    <td colspan="4" class="center" style="font-weight: bold; background-color: #ffc0cb4d;">Total Amount
+                    </td>
+                    <td class="center" style="font-weight: bold;">{{ invoiceService.netAmount() | number:'1.0-0' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Student Details -->
+        <div class="print-section-title">STUDENT DETAILS</div>
+        <table class="print-table">
+            <thead>
+                <tr>
+                    <th>S.NO</th>
+                    <th>STUDENT NAME</th>
+                    <th>COURSE NAME</th>
+                    <th>DURATION</th>
+                    <th>START DATE</th>
+                    <th>END DATE</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let student of invoiceService.students(); let i = index">
+                    <td class="center">{{ i + 1 }}</td>
+                    <td class="center">{{ student.name }}</td>
+                    <td class="center">{{ student.courseName }}</td>
+                    <td class="center">{{ student.duration }} {{ student.durationUnit | uppercase }}</td>
+                    <td class="center">{{ student.startDate | date:'dd/MM/yyyy' }}</td>
+                    <td class="center">{{ student.endDate | date:'dd/MM/yyyy' }}</td>
+                </tr>
+                <!-- Fill empty rows if needed to match look, but dynamic is better -->
+                <tr *ngIf="invoiceService.students().length < 5">
+                    <td class="center">&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr *ngIf="invoiceService.students().length < 4">
+                    <td class="center">&nbsp;</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- Terms and Conditions -->
+        <div style="margin-top: 30px; font-size: 12px;">
+            <div style="font-weight: bold; margin-bottom: 5px;">TERMS AND CONDITIONS:</div>
+            <ul style="padding-left: 20px; margin: 0;">
+                <li>Payment will be processed only after completion of sessions and verification of attendance and
+                    deliverables by Ednue.</li>
+                <li>The amount payable will be based strictly on the agreed rate per student or per session, as approved
+                    before training.</li>
+                <li>Once payment is processed, the amount is final and no additional charges or revisions will be
+                    accepted for the same engagement.</li>
+                <li>Applicable statutory deductions such as TDS may apply. The trainer is responsible for compliance
+                    with tax obligations.</li>
+                <li>Training materials, student data, and internal information from Ednue must remain confidential and
+                    must not be reused or shared without written approval.</li>
+            </ul>
         </div>
 
-        <!-- Footer / Totals -->
-        <div class="flex justify-end mb-12">
-            <div class="w-1/2">
-                <div class="flex justify-between mb-2 text-sm">
-                    <span class="text-gray-600">Sub Total</span>
-                    <span class="font-bold text-gray-800">{{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
-                </div>
-                <div class="flex justify-between mb-4 text-sm border-b border-gray-200 pb-4">
-                    <span class="text-gray-600">Tax Rate</span>
-                    <span class="font-bold text-gray-800">0.00%</span>
-                </div>
-                <div class="flex justify-between items-center text-lg">
-                    <span class="font-bold text-gray-800">Total</span>
-                    <span class="font-bold text-gray-800">${{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
-                </div>
-
-                <div class="mt-4 bg-[#ec4899] text-white p-3 flex justify-between items-center font-bold">
-                    <span>Balance Due</span>
-                    <span>${{ invoiceService.totalAmount() | number:'1.2-2' }}</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Terms -->
-        <div class="mb-8">
-            <h3 class="text-lg font-normal text-gray-800 mb-2">Terms & Conditions</h3>
-            <p class="text-gray-500 text-sm">
-                All payments must be made in full before the commencement of any design work.
-            </p>
-        </div>
-
-        <!-- Bank Details for Print -->
-        <div class="mt-8 pt-8 border-t border-gray-200">
-            <h3 class="text-lg font-normal text-gray-800 mb-2">Bank Details</h3>
-            <div class="grid grid-cols-2 gap-4 text-sm text-gray-600">
-                <div>Bank: {{ invoiceService.bank().bankName }}</div>
-                <div>Account: {{ invoiceService.bank().accountNumber }}</div>
-                <div>IFSC: {{ invoiceService.bank().ifsc }}</div>
-                <div>Holder: {{ invoiceService.bank().accountHolder }}</div>
-            </div>
+        <div class="print-footer">
+            (P.T.O)
         </div>
     </div>
 </div>

@@ -63,4 +63,11 @@ export class AppComponent {
         }
         window.print();
     }
+
+    populateDummy = true;
+    dummyStudentCount = 50;
+
+    populateDummyData() {
+        this.invoiceService.populateAllDummyData(this.dummyStudentCount);
+    }
 }
