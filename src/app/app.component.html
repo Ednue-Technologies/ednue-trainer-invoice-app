@@ -1,10 +1,15 @@
 <div class="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <!-- Dark Mode Toggle (Fixed Position) -->
-    <button (click)="toggleDarkMode()"
-        class="fixed right-4 top-4 z-50 p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
-        [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
-        <lucide-icon [img]="darkMode ? Sun : Moon" class="w-6 h-6 text-gray-600 dark:text-gray-300"></lucide-icon>
-    </button>
+    <!-- Dark Mode Toggle Switch (Fixed Position) -->
+    <div class="fixed right-4 top-4 z-50">
+        <label class="theme-switch">
+            <input type="checkbox" [checked]="darkMode" (change)="toggleDarkMode()">
+            <span class="slider round">
+                <lucide-icon [img]="Sun" class="icon sun"></lucide-icon>
+                <lucide-icon [img]="Moon" class="icon moon"></lucide-icon>
+            </span>
+        </label>
+    </div>
 
     <div class="max-w-5xl mx-auto">
         <header class="mb-8 text-center">

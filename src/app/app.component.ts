@@ -32,20 +32,23 @@ export class AppComponent {
     darkMode = false;
 
     constructor() {
-        // Check system preference
-        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-            this.darkMode = true;
-            document.documentElement.classList.add('dark');
-        }
+        // Automatic dark mode detection disabled as per user request
+        // Default to Light Mode (false)
+        this.darkMode = false; // Ensure darkMode is false by default
+        this.updateTheme(); // Call updateTheme to apply the initial theme
     }
 
-    toggleDarkMode() {
-        this.darkMode = !this.darkMode;
+    updateTheme() {
         if (this.darkMode) {
             document.documentElement.classList.add('dark');
         } else {
             document.documentElement.classList.remove('dark');
         }
+    }
+
+    toggleDarkMode() {
+        this.darkMode = !this.darkMode;
+        this.updateTheme();
     }
     currentYear = new Date().getFullYear();
 
