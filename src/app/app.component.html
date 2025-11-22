@@ -1,9 +1,15 @@
-<div class="min-h-screen p-4 md:p-8">
+<div class="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <div class="max-w-5xl mx-auto">
-        <header class="mb-8 text-center">
-            <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="mx-auto mb-4">
+        <header class="mb-8 text-center relative">
+            <button (click)="toggleDarkMode()"
+                class="absolute right-0 top-0 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+                [attr.aria-label]="darkMode ? 'Switch to light mode' : 'Switch to dark mode'">
+                <lucide-icon [img]="darkMode ? Sun : Moon"
+                    class="w-6 h-6 text-gray-600 dark:text-gray-300"></lucide-icon>
+            </button>
+            <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="mx-auto mb-4 h-16">
             <h1 class="text-4xl font-bold text-[#ec4899] mb-2">Invoice Generator</h1>
-            <p class="text-slate-500 text-lg">Ednue Trainer Portal</p>
+            <p class="text-slate-500 dark:text-slate-400 text-lg">Ednue Trainer Portal</p>
         </header>
 
         <main>
@@ -14,33 +20,85 @@
 
             <div class="flex flex-col md:flex-row justify-end mt-8 mb-12 gap-6">
                 <button
-                    class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full"
-                    (click)="copyEmailToClipboard()" data-tooltip="Copy email content to clipboard">
+                    class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
+                    (click)="copyEmailToClipboard()">
                     <lucide-icon [img]="Copy" class="w-4 h-4"></lucide-icon>
                     Copy Email
                 </button>
                 <button
-                    class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full"
-                    (click)="downloadPdf()" data-tooltip="Download invoice as PDF">
+                    class="btn btn-primary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full"
+                    (click)="downloadPdf()">
                     <lucide-icon [img]="Download" class="w-4 h-4"></lucide-icon>
                     Download PDF
                 </button>
                 <button
-                    class="btn btn-primary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-md hover:shadow-lg rounded-full"
-                    (click)="generateInvoice()" data-tooltip="Generate invoice and open mail client">
+                    class="btn btn-primary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full"
+                    (click)="generateInvoice()">
                     <lucide-icon [img]="Send" class="w-4 h-4"></lucide-icon>
                     Generate & Send
                 </button>
                 <button *ngIf="populateDummy"
-                    class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full"
+                    class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600"
                     (click)="populateDummyData()"
                     [attr.data-tooltip]="'Add ' + dummyStudentCount + ' dummy students & fill all forms'">
                     Populate Dummy Data
                 </button>
             </div>
+
+            <!-- Webpage Terms and Conditions -->
+            <div
+                class="mt-12 p-6 bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+                <h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">TERMS AND CONDITIONS</h3>
+                <ul class="space-y-3 text-sm text-gray-600 dark:text-gray-300 list-disc pl-5">
+                    <li>
+                        <strong>Approved Rates Only:</strong> Payment will be processed based on the agreed price per
+                        student or per session. Any revisions to pricing must be approved in writing by Ednue before
+                        invoice submission.
+                    </li>
+                    <li>
+                        <strong>Final Amount:</strong> Once payment is processed, no additional claims, revisions, or
+                        supplementary charges for the same engagement will be accepted.
+                    </li>
+                    <li>
+                        <strong>Completion & Verification:</strong> Payment is subject to verification of attendance,
+                        successful completion of training sessions, and confirmation from Ednue’s coordinator.
+                    </li>
+                    <li>
+                        <strong>Documentation Required:</strong> Payment will be processed only after submission of
+                        required documents such as attendance records, session summaries, and any deliverables requested
+                        by Ednue.
+                    </li>
+                    <li>
+                        <strong>Compliance:</strong> The trainer must comply with course structure, schedule, and
+                        quality standards agreed prior to the engagement. Deviations may affect payment eligibility.
+                    </li>
+                    <li>
+                        <strong>Taxes & Deductions:</strong> Applicable statutory deductions (e.g., TDS) may be applied
+                        as per law. The trainer is responsible for their own tax filings.
+                    </li>
+                    <li>
+                        <strong>No Direct Billing to Students:</strong> The trainer shall not collect fees directly from
+                        students for the work covered under this invoice.
+                    </li>
+                    <li>
+                        <strong>Confidentiality:</strong> All training materials, student data, and internal information
+                        shared by Ednue must remain confidential and cannot be reused commercially without written
+                        approval.
+                    </li>
+                    <li>
+                        <strong>Liability:</strong> The trainer is responsible for the accuracy and originality of their
+                        training content and will be liable for any claims arising from copyright violations or
+                        misconduct.
+                    </li>
+                    <li>
+                        <strong>Jurisdiction:</strong> Any disputes related to this engagement shall be subject to
+                        Chennai jurisdiction.
+                    </li>
+                </ul>
+            </div>
         </main>
 
-        <footer class="text-center text-slate-400 text-sm pb-8">
+        <footer class="text-center text-slate-400 text-sm py-8">
             &copy; {{ currentYear }} Ednue Technologies. All rights reserved.
         </footer>
     </div>
@@ -52,20 +110,22 @@
     <div class="print-container">
         <!-- Header -->
         <div class="print-header">
-            <img src="assets/ednue-logo.png" alt="Ednue Technologies" class="print-logo">
+            <div class="print-logo">
+                <img src="assets/ednue-logo.png" alt="Ednue Logo" style="height: 60px;">
+            </div>
             <div class="print-title">TRAINER INVOICE</div>
-            <div style="text-align: right; font-weight: bold;">{{ invoiceService.trainer().date | date:'MMMM dd, yyyy'
-                }}</div>
+            <div style="text-align: right; font-weight: bold; margin-top: 10px;">
+                {{ invoiceService.trainer().date | date:'longDate' }}
+            </div>
         </div>
 
-        <!-- From / To -->
+        <!-- From / To Section -->
         <div class="print-grid">
             <div>
                 <div style="font-weight: bold; margin-bottom: 5px;">From:</div>
                 <div>{{ invoiceService.trainer().name }}</div>
                 <div>{{ invoiceService.trainer().email }}</div>
                 <div>{{ invoiceService.trainer().contact }}</div>
-                <div>{{ invoiceService.course().courseName }}</div>
             </div>
             <div>
                 <div style="font-weight: bold; margin-bottom: 5px;">To:</div>
@@ -79,30 +139,32 @@
         <!-- Account Details -->
         <div class="print-section-title">ACCOUNT DETAILS</div>
         <table class="print-table">
-            <tr>
-                <td style="width: 30%;">ACCOUNT HOLDER NAME</td>
-                <td>{{ invoiceService.bank().accountHolder }}</td>
-            </tr>
-            <tr>
-                <td>ACCOUNT NUMBER</td>
-                <td>{{ invoiceService.bank().accountNumber }}</td>
-            </tr>
-            <tr>
-                <td>IFSC CODE</td>
-                <td>{{ invoiceService.bank().ifsc }}</td>
-            </tr>
-            <tr>
-                <td>BANK NAME</td>
-                <td>{{ invoiceService.bank().bankName }}</td>
-            </tr>
-            <tr>
-                <td>BRANCH</td>
-                <td>{{ invoiceService.bank().branch }}</td>
-            </tr>
-            <tr>
-                <td>PAN</td>
-                <td>{{ invoiceService.bank().pan }}</td>
-            </tr>
+            <tbody>
+                <tr>
+                    <td style="width: 30%;">ACCOUNT HOLDER NAME</td>
+                    <td>{{ invoiceService.bank().accountHolder }}</td>
+                </tr>
+                <tr>
+                    <td>ACCOUNT NUMBER</td>
+                    <td>{{ invoiceService.bank().accountNumber }}</td>
+                </tr>
+                <tr>
+                    <td>IFSC CODE</td>
+                    <td>{{ invoiceService.bank().ifsc }}</td>
+                </tr>
+                <tr>
+                    <td>BANK NAME</td>
+                    <td>{{ invoiceService.bank().bankName }}</td>
+                </tr>
+                <tr>
+                    <td>BRANCH</td>
+                    <td>{{ invoiceService.bank().branch }}</td>
+                </tr>
+                <tr>
+                    <td>PAN</td>
+                    <td>{{ invoiceService.bank().pan }}</td>
+                </tr>
+            </tbody>
         </table>
 
         <!-- Course Details -->
@@ -110,11 +172,11 @@
         <table class="print-table">
             <thead>
                 <tr>
-                    <th>S.NO</th>
-                    <th>COURSE NAME</th>
-                    <th>TOTAL STUDENTS</th>
-                    <th>Price Per Head (₹)</th>
-                    <th>Total Price (₹)</th>
+                    <th class="center" style="width: 10%;">S.NO</th>
+                    <th class="center" style="width: 30%;">COURSE NAME</th>
+                    <th class="center" style="width: 20%;">TOTAL STUDENTS</th>
+                    <th class="center" style="width: 20%;">Price Per Head (₹)</th>
+                    <th class="center" style="width: 20%;">Total Price (₹)</th>
                 </tr>
             </thead>
             <tbody>
@@ -137,12 +199,12 @@
         <table class="print-table">
             <thead>
                 <tr>
-                    <th>S.NO</th>
-                    <th>STUDENT NAME</th>
-                    <th>COURSE NAME</th>
-                    <th>DURATION</th>
-                    <th>START DATE</th>
-                    <th>END DATE</th>
+                    <th class="center" style="width: 10%;">S.NO</th>
+                    <th class="center" style="width: 25%;">STUDENT NAME</th>
+                    <th class="center" style="width: 25%;">COURSE NAME</th>
+                    <th class="center" style="width: 15%;">DURATION</th>
+                    <th class="center" style="width: 12.5%;">START DATE</th>
+                    <th class="center" style="width: 12.5%;">END DATE</th>
                 </tr>
             </thead>
             <tbody>
@@ -154,27 +216,10 @@
                     <td class="center">{{ student.startDate | date:'dd/MM/yyyy' }}</td>
                     <td class="center">{{ student.endDate | date:'dd/MM/yyyy' }}</td>
                 </tr>
-                <!-- Fill empty rows if needed to match look, but dynamic is better -->
-                <tr *ngIf="invoiceService.students().length < 5">
-                    <td class="center">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr *ngIf="invoiceService.students().length < 4">
-                    <td class="center">&nbsp;</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
-                </tr>
             </tbody>
         </table>
 
-        <!-- Terms and Conditions -->
+        <!-- Terms and Conditions (Old Version for PDF) -->
         <div style="margin-top: 30px; font-size: 12px;">
             <div style="font-weight: bold; margin-bottom: 5px;">TERMS AND CONDITIONS:</div>
             <ul style="padding-left: 20px; margin: 0;">
@@ -189,10 +234,6 @@
                 <li>Training materials, student data, and internal information from Ednue must remain confidential and
                     must not be reused or shared without written approval.</li>
             </ul>
-        </div>
-
-        <div class="print-footer">
-            (P.T.O)
         </div>
     </div>
 </div>

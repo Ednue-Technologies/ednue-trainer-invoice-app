@@ -5,7 +5,7 @@ import { BankDetailsComponent } from './components/bank-details/bank-details.com
 import { CourseDetailsComponent } from './components/course-details/course-details.component';
 import { StudentDetailsComponent } from './components/student-details/student-details.component';
 import { InvoiceService } from './services/invoice.service';
-import { LucideAngularModule, Send, Copy, Download } from 'lucide-angular';
+import { LucideAngularModule, Send, Copy, Download, Sun, Moon } from 'lucide-angular';
 
 @Component({
     selector: 'app-root',
@@ -23,9 +23,30 @@ import { LucideAngularModule, Send, Copy, Download } from 'lucide-angular';
 })
 export class AppComponent {
     invoiceService = inject(InvoiceService);
-    Send = Send;
-    Copy = Copy;
-    Download = Download;
+    protected readonly Send = Send;
+    protected readonly Copy = Copy;
+    protected readonly Download = Download;
+    protected readonly Sun = Sun;
+    protected readonly Moon = Moon;
+
+    darkMode = false;
+
+    constructor() {
+        // Check system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            this.darkMode = true;
+            document.documentElement.classList.add('dark');
+        }
+    }
+
+    toggleDarkMode() {
+        this.darkMode = !this.darkMode;
+        if (this.darkMode) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    }
     currentYear = new Date().getFullYear();
 
     generateInvoice() {
