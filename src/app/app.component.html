@@ -126,13 +126,8 @@
                     <td class="center">{{ invoiceService.totalAmount() | number:'1.0-0' }}</td>
                 </tr>
                 <tr>
-                    <td colspan="4" class="center" style="background-color: #ffc0cb4d;">TDS (10%)</td>
-                    <td class="center">- {{ invoiceService.tdsAmount() | number:'1.0-0' }}</td>
-                </tr>
-                <tr>
-                    <td colspan="4" class="center" style="font-weight: bold; background-color: #ffc0cb4d;">Total Amount
-                    </td>
-                    <td class="center" style="font-weight: bold;">{{ invoiceService.netAmount() | number:'1.0-0' }}</td>
+                    <td colspan="4" class="text-right font-bold p-2 border-r border-gray-300">Total Amount</td>
+                    <td class="font-bold p-2 text-center">{{ invoiceService.totalAmount() | number:'1.0-0' }}</td>
                 </tr>
             </tbody>
         </table>

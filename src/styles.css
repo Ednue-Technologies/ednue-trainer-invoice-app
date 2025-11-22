@@ -348,7 +348,7 @@ td {
     width: 100%;
     height: 100%;
     border: 2px solid #ec4899;
-    z-index: -1;
+    z-index: 50;
     pointer-events: none;
   }
 

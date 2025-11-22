@@ -50,14 +50,6 @@ export class InvoiceService {
     return c.totalStudents * c.pricePerStudent;
   });
 
-  tdsAmount = computed(() => {
-    return this.totalAmount() * 0.10;
-  });
-
-  netAmount = computed(() => {
-    return this.totalAmount() - this.tdsAmount();
-  });
-
   constructor() { }
 
   // Update Methods
