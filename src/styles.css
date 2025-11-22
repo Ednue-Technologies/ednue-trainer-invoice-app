@@ -353,7 +353,7 @@ td {
   .print-container {
     /* Removed border from here */
     padding: 20px;
-    min-height: 95vh;
+    /* min-height: 95vh; REMOVED to fix large gap */
     position: relative;
     z-index: 1;
   }
@@ -367,6 +367,78 @@ td {
     border: 2px solid #ec4899;
     z-index: 50;
     pointer-events: none;
+  }
+
+  /* Dark Mode Fixes */
+  .dark input,
+  .dark select,
+  .dark textarea,
+  .dark input.ng-invalid,
+  .dark select.ng-invalid,
+  .dark textarea.ng-invalid,
+  .dark input.ng-touched,
+  .dark select.ng-touched,
+  .dark textarea.ng-touched {
+    background-color: #1e293b !important;
+    border-color: #334155 !important;
+    color: #f8fafc !important;
+  }
+
+  /* Fix for date inputs in dark mode */
+  .dark input[type="date"] {
+    color-scheme: dark;
+  }
+
+  .dark input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(100%);
+    cursor: pointer;
+  }
+
+  /* Button Fixes - White Outline & Text */
+  .dark .btn-secondary,
+  .dark button.btn-secondary {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+  }
+
+  .dark .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .dark .btn-primary {
+    /* Ensure primary buttons (usually pink) have white text */
+    color: #ffffff !important;
+  }
+
+  /* Force white border for inputs in dark mode as requested for Invoice Date */
+  .dark input,
+  .dark select,
+  .dark textarea {
+    border-color: #ffffff !important;
+    /* White border */
+    color: #ffffff !important;
+    /* White text */
+    background-color: #1e293b !important;
+  }
+
+  /* Student Details Table Inputs - Safety Net */
+  .dark table input,
+  .dark table select,
+  .dark table input:focus,
+  .dark table select:focus {
+    background-color: #1e293b !important;
+    color: #f8fafc !important;
+    border-color: #334155 !important;
+    box-shadow: none !important;
+    /* Remove default focus shadow if needed, or adjust */
+  }
+
+  .dark table input.ng-invalid.ng-touched,
+  .dark table select.ng-invalid.ng-touched {
+    background-color: #450a0a !important;
+    /* Dark red for invalid */
+    border-color: #ef4444 !important;
   }
 
   .print-header {

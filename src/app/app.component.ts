@@ -86,7 +86,7 @@ export class AppComponent {
     }
 
     populateDummy = true;
-    dummyStudentCount = 50;
+    dummyStudentCount = 100;
 
     populateDummyData() {
         this.invoiceService.populateAllDummyData(this.dummyStudentCount);

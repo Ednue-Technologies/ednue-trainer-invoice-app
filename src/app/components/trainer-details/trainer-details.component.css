@@ -9,3 +9,24 @@
     margin-top: 0.25rem;
     display: block;
 }
+
+/* Dark Mode Overrides */
+:host-context(.dark) input {
+    background-color: #1e293b !important;
+    border-color: #ffffff !important;
+    color: #ffffff !important;
+}
+
+:host-context(.dark) .error-input {
+    background-color: #450a0a !important;
+    border-color: #ef4444 !important;
+}
+
+:host-context(.dark) input[type="date"] {
+    color-scheme: dark;
+}
+
+:host-context(.dark) input[type="date"]::-webkit-calendar-picker-indicator {
+    filter: invert(1) brightness(100%);
+    cursor: pointer;
+}

@@ -12,9 +12,23 @@
     box-shadow: inset 0 0 0 1px var(--primary);
 }
 
-.tabl.error-input {
+/* Dark Mode Overrides */
+:host-context(.dark) .table-input:focus,
+:host-context(.dark) .table-select:focus {
+    background: #1e293b !important;
+    color: #f8fafc !important;
+    box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+.error-input {
     border-color: #ef4444 !important;
     background-color: #fef2f2 !important;
+}
+
+:host-context(.dark) .error-input {
+    background-color: #450a0a !important;
+    /* Dark red background */
+    border-color: #ef4444 !important;
 }
 
 .error-msg {
@@ -52,12 +66,32 @@
     background: rgba(0, 0, 0, 0.05);
 }
 
+:host-context(.dark) .btn-icon:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
 .text-blue-500 {
     color: #3b82f6;
 }
 
 .text-red-500 {
     color: #ef4444;
+}
+
+/* Make 'Copy All' (green) button white in Dark Mode */
+:host-context(.dark) .text-green-600 {
+    color: #ffffff !important;
+}
+
+/* Fix 'Add Student' button in Dark Mode */
+:host-context(.dark) .btn-secondary {
+    background-color: transparent !important;
+    color: #ffffff !important;
+    border: 1px solid #ffffff !important;
+}
+
+:host-context(.dark) .btn-secondary:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 .text-center {
