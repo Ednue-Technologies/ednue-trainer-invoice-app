@@ -99,7 +99,7 @@
     height: 22px;
     width: 22px;
     left: 4px;
-    bottom: 3px;
+    bottom: 4px;
     background-color: white;
     transition: .4s;
     border-radius: 50%;
@@ -113,26 +113,29 @@ input:checked+.slider {
 }
 
 input:checked+.slider:before {
-    transform: translateX(28px);
+    transform: translateX(30px);
 }
 
-/* Icons inside the slider */
+/* Icons inside the slider - Exact mathematical center */
 .slider .icon {
-    width: 16px;
-    height: 16px;
-    z-index: 1;
+    position: absolute;
+    top: 7px;
+    width: 14px;
+    height: 14px;
+    z-index: 3;
     transition: opacity 0.3s;
+    pointer-events: none;
 }
 
 .slider .sun {
+    left: 8px;
     color: #f59e0b;
-    /* Amber for sun */
     opacity: 1;
 }
 
 .slider .moon {
-    color: #f8fafc;
-    /* White for moon */
+    left: 38px;
+    color: #1e293b;
     opacity: 0;
 }
 

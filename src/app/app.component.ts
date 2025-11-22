@@ -5,7 +5,8 @@ import { BankDetailsComponent } from './components/bank-details/bank-details.com
 import { CourseDetailsComponent } from './components/course-details/course-details.component';
 import { StudentDetailsComponent } from './components/student-details/student-details.component';
 import { InvoiceService } from './services/invoice.service';
-import { LucideAngularModule, Send, Copy, Download, Sun, Moon } from 'lucide-angular';
+import { TourService } from './services/tour.service';
+import { LucideAngularModule, Send, Copy, Download, Sun, Moon, HelpCircle } from 'lucide-angular';
 
 @Component({
     selector: 'app-root',
@@ -23,19 +24,28 @@ import { LucideAngularModule, Send, Copy, Download, Sun, Moon } from 'lucide-ang
 })
 export class AppComponent {
     invoiceService = inject(InvoiceService);
+    tourService = inject(TourService);
     protected readonly Send = Send;
     protected readonly Copy = Copy;
     protected readonly Download = Download;
     protected readonly Sun = Sun;
     protected readonly Moon = Moon;
+    protected readonly HelpCircle = HelpCircle;
 
     darkMode = false;
 
     constructor() {
         // Automatic dark mode detection disabled as per user request
         // Default to Light Mode (false)
-        this.darkMode = false; // Ensure darkMode is false by default
-        this.updateTheme(); // Call updateTheme to apply the initial theme
+        this.darkMode = false;
+        this.updateTheme();
+
+        // Auto-start tour for first-time users
+        setTimeout(() => {
+            if (!this.tourService.hasTourCompleted()) {
+                this.tourService.startTour();
+            }
+        }, 1000);
     }
 
     updateTheme() {
@@ -85,10 +95,34 @@ export class AppComponent {
             alert('Please fix the validation errors before downloading.');
             return;
         }
+
+        // Store original title
+        const originalTitle = document.title;
+
+        // Construct filename: CourseName_Invoice_TrainerName
+        const trainer = this.invoiceService.trainer();
+        const course = this.invoiceService.course();
+
+        const trainerName = trainer.name ? trainer.name.replace(/\s+/g, '_') : 'Trainer';
+        const courseName = course.courseName ? course.courseName.replace(/\s+/g, '_') : 'Course';
+
+        const newTitle = `${courseName}_Invoice_${trainerName}`;
+        document.title = newTitle;
+
+        // Print
         window.print();
+
+        // Restore title after a delay to ensure print dialog picks it up
+        setTimeout(() => {
+            document.title = originalTitle;
+        }, 1000);
     }
 
-    populateDummy = true;
+    startTour() {
+        this.tourService.startTour();
+    }
+
+    populateDummy = false;
     dummyStudentCount = 100;
 
     populateDummyData() {

@@ -1,7 +1,18 @@
 <div class="min-h-screen p-4 md:p-8 bg-gray-50 dark:bg-gray-900 transition-colors duration-200">
     <!-- Dark Mode Toggle (Fixed Position) -->
     <!-- Dark Mode Toggle Switch (Fixed Position) -->
-    <div class="fixed right-4 top-4 z-50">
+    <!-- Dark Mode Toggle Switch (Fixed Position) -->
+    <!-- Dark Mode Toggle & Help Button -->
+    <div class="fixed z-50"
+        style="position: fixed; top: 1rem; right: 1rem; display: flex; gap: 0.75rem; align-items: center;">
+        <!-- Help Button -->
+        <button (click)="startTour()"
+            class="p-2 rounded-full bg-white dark:bg-gray-800 shadow-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors border border-gray-200 dark:border-gray-700"
+            title="Start Tour" aria-label="Start guided tour">
+            <lucide-icon [img]="HelpCircle" class="w-6 h-6 text-gray-600 dark:text-gray-300"></lucide-icon>
+        </button>
+
+        <!-- Dark Mode Toggle -->
         <label class="theme-switch">
             <input type="checkbox" [checked]="darkMode" (change)="toggleDarkMode()">
             <span class="slider round">
@@ -103,9 +114,9 @@
                 </ul>
             </div>
         </main>
-
-        <footer class="text-center text-slate-400 text-sm py-8">
-            &copy; {{ currentYear }} Ednue Technologies. All rights reserved.
+        <!-- Footer -->
+        <footer class="pb-8 text-center text-sm font-medium" style="color: #ec4899; margin-top: 120px;">
+            <p>&copy; 2025 Ednue Technologies. All rights reserved.</p>
         </footer>
     </div>
 </div>
@@ -117,7 +128,7 @@
         <!-- Header -->
         <div class="print-header">
             <div class="print-logo">
-                <img src="assets/ednue-logo.png" alt="Ednue Logo" style="height: 60px;">
+                <img src="assets/Ednue with Tagline.png" alt="Ednue Logo" style="height: 60px;">
             </div>
             <div class="print-title">TRAINER INVOICE</div>
             <div style="text-align: right; font-weight: bold; margin-top: 10px;">
@@ -240,6 +251,11 @@
                 <li>Training materials, student data, and internal information from Ednue must remain confidential and
                     must not be reused or shared without written approval.</li>
             </ul>
+        </div>
+
+        <!-- Print Footer -->
+        <div style="margin-top: 50px; text-align: center; color: #ec4899; font-size: 12px; font-weight: 500;">
+            &copy; 2025 Ednue Technologies. All rights reserved.
         </div>
     </div>
 </div>
