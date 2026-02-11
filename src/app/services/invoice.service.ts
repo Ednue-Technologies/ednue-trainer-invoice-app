@@ -52,23 +52,27 @@ export class InvoiceService {
 
   constructor() {
     // Load from localStorage
-    const savedTrainer = localStorage.getItem('trainer');
-    if (savedTrainer) this.trainer.set(JSON.parse(savedTrainer));
-
-    const savedBank = localStorage.getItem('bank');
-    if (savedBank) this.bank.set(JSON.parse(savedBank));
-
-    const savedCourse = localStorage.getItem('course');
-    if (savedCourse) this.course.set(JSON.parse(savedCourse));
-
-    const savedStudents = localStorage.getItem('students');
-    if (savedStudents) this.students.set(JSON.parse(savedStudents));
+    this.trainer.set(this.safeParse('trainer', { name: '', email: '', contact: '', date: new Date().toISOString().split('T')[0] }));
+    this.bank.set(this.safeParse('bank', { bankName: '', accountHolder: '', accountNumber: '', ifsc: '', branch: '', pan: '' }));
+    this.course.set(this.safeParse('course', { courseName: '', totalStudents: 0, pricePerStudent: 0 }));
+    this.students.set(this.safeParse('students', [{ id: 1, name: '', courseName: '', duration: '', durationUnit: 'days', startDate: '', endDate: '' }]));
 
     // Persist to localStorage
     effect(() => localStorage.setItem('trainer', JSON.stringify(this.trainer())));
     effect(() => localStorage.setItem('bank', JSON.stringify(this.bank())));
     effect(() => localStorage.setItem('course', JSON.stringify(this.course())));
     effect(() => localStorage.setItem('students', JSON.stringify(this.students())));
+  }
+
+  private safeParse(key: string, fallback: any): any {
+    const item = localStorage.getItem(key);
+    if (!item) return fallback;
+    try {
+      return JSON.parse(item);
+    } catch (e) {
+      console.warn(`Failed to parse ${key} from localStorage, using fallback.`, e);
+      return fallback;
+    }
   }
 
   // Update Methods
@@ -210,7 +214,12 @@ export class InvoiceService {
     this.bank.set({ bankName: '', accountHolder: '', accountNumber: '', ifsc: '', branch: '', pan: '' });
     this.course.set({ courseName: '', totalStudents: 0, pricePerStudent: 0 });
     this.students.set([{ id: 1, name: '', courseName: '', duration: '', durationUnit: 'days', startDate: '', endDate: '' }]);
-    localStorage.clear();
+
+    // Only remove specific keys instead of clearing everything
+    localStorage.removeItem('trainer');
+    localStorage.removeItem('bank');
+    localStorage.removeItem('course');
+    localStorage.removeItem('students');
   }
 
   // Validation State
