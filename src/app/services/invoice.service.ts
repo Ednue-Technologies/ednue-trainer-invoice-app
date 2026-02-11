@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, effect } from '@angular/core';
 
 export interface TrainerDetails {
   name: string;
@@ -50,7 +50,40 @@ export class InvoiceService {
     return c.totalStudents * c.pricePerStudent;
   });
 
-  constructor() { }
+  constructor() {
+    // Load from localStorage
+    this.trainer.set(this.safeParse('trainer', { name: '', email: '', contact: '', date: new Date().toISOString().split('T')[0] }));
+    this.bank.set(this.safeParse('bank', { bankName: '', accountHolder: '', accountNumber: '', ifsc: '', branch: '', pan: '' }));
+    this.course.set(this.safeParse('course', { courseName: '', totalStudents: 0, pricePerStudent: 0 }));
+    this.students.set(this.safeParse('students', [{ id: 1, name: '', courseName: '', duration: '', durationUnit: 'days', startDate: '', endDate: '' }]));
+
+    // Persist to localStorage
+    effect(() => localStorage.setItem('trainer', JSON.stringify(this.trainer())));
+    effect(() => localStorage.setItem('bank', JSON.stringify(this.bank())));
+    effect(() => localStorage.setItem('course', JSON.stringify(this.course())));
+    effect(() => localStorage.setItem('students', JSON.stringify(this.students())));
+  }
+
+  private safeParse(key: string, fallback: any): any {
+    const item = localStorage.getItem(key);
+    if (!item) return fallback;
+    try {
+      const parsed = JSON.parse(item);
+      // Handle array fallbacks (e.g. students list)
+      if (Array.isArray(fallback)) {
+        return Array.isArray(parsed) ? parsed : fallback;
+      }
+      // Handle object fallbacks (merge to ensure all keys exist)
+      if (typeof parsed === 'object' && parsed !== null) {
+        return { ...fallback, ...parsed };
+      }
+      // If parsed is a primitive (string/number/boolean) but fallback is object, ignore it
+      return fallback;
+    } catch (e) {
+      console.warn(`Failed to parse ${key} from localStorage, using fallback.`, e);
+      return fallback;
+    }
+  }
 
   // Update Methods
   updateTrainer(data: Partial<TrainerDetails>) {
@@ -184,6 +217,19 @@ export class InvoiceService {
       endDate: '2023-11-30'
     }));
     this.students.set(dummyStudents);
+  }
+
+  reset() {
+    this.trainer.set({ name: '', email: '', contact: '', date: new Date().toISOString().split('T')[0] });
+    this.bank.set({ bankName: '', accountHolder: '', accountNumber: '', ifsc: '', branch: '', pan: '' });
+    this.course.set({ courseName: '', totalStudents: 0, pricePerStudent: 0 });
+    this.students.set([{ id: 1, name: '', courseName: '', duration: '', durationUnit: 'days', startDate: '', endDate: '' }]);
+
+    // Only remove specific keys instead of clearing everything
+    localStorage.removeItem('trainer');
+    localStorage.removeItem('bank');
+    localStorage.removeItem('course');
+    localStorage.removeItem('students');
   }
 
   // Validation State

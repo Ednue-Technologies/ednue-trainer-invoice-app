@@ -36,6 +36,15 @@
             <app-bank-details></app-bank-details>
 
             <div class="flex flex-col md:flex-row justify-end mt-8 mb-12 gap-6">
+                <!-- Reset Button -->
+                <button
+                    class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full group"
+                    (click)="resetData()" title="Reset all data">
+                    <lucide-icon [img]="RotateCcw"
+                        class="w-4 h-4 text-gray-500 group-hover:text-red-500 transition-colors"></lucide-icon>
+                    Reset
+                </button>
+
                 <button
                     class="btn btn-secondary text-sm font-medium px-6 py-3 w-full md:w-auto shadow-sm hover:shadow rounded-full"
                     (click)="copyEmailToClipboard()">
@@ -259,3 +268,4 @@
         </div>
     </div>
 </div>
+<app-toast></app-toast>

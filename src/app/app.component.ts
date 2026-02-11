@@ -6,7 +6,9 @@ import { CourseDetailsComponent } from './components/course-details/course-detai
 import { StudentDetailsComponent } from './components/student-details/student-details.component';
 import { InvoiceService } from './services/invoice.service';
 import { TourService } from './services/tour.service';
-import { LucideAngularModule, Send, Copy, Download, Sun, Moon, HelpCircle } from 'lucide-angular';
+import { ToastService } from './services/toast.service';
+import { ToastComponent } from './components/toast/toast.component';
+import { LucideAngularModule, Send, Copy, Download, Sun, Moon, HelpCircle, RotateCcw } from 'lucide-angular';
 
 @Component({
     selector: 'app-root',
@@ -17,7 +19,8 @@ import { LucideAngularModule, Send, Copy, Download, Sun, Moon, HelpCircle } from
         BankDetailsComponent,
         CourseDetailsComponent,
         StudentDetailsComponent,
-        LucideAngularModule
+        LucideAngularModule,
+        ToastComponent
     ],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
@@ -25,12 +28,15 @@ import { LucideAngularModule, Send, Copy, Download, Sun, Moon, HelpCircle } from
 export class AppComponent {
     invoiceService = inject(InvoiceService);
     tourService = inject(TourService);
+    toastService = inject(ToastService);
+
     protected readonly Send = Send;
     protected readonly Copy = Copy;
     protected readonly Download = Download;
     protected readonly Sun = Sun;
     protected readonly Moon = Moon;
     protected readonly HelpCircle = HelpCircle;
+    protected readonly RotateCcw = RotateCcw;
 
     darkMode = false;
 
@@ -67,14 +73,14 @@ export class AppComponent {
         if (mailtoLink) {
             window.location.href = mailtoLink;
         } else {
-            alert('Please fix the validation errors before generating the invoice.');
+            this.toastService.error('Please fix the validation errors before generating the invoice.');
         }
     }
 
     async copyEmailToClipboard() {
         const htmlContent = this.invoiceService.generateHtmlEmail();
         if (!htmlContent) {
-            alert('Please fix the validation errors before copying.');
+            this.toastService.error('Please fix the validation errors before copying.');
             return;
         }
 
@@ -83,16 +89,16 @@ export class AppComponent {
             const blob = new Blob([htmlContent], { type });
             const data = [new ClipboardItem({ [type]: blob })];
             await navigator.clipboard.write(data);
-            alert('Email content copied to clipboard! You can now paste it into your email client.');
+            this.toastService.success('Email content copied to clipboard!');
         } catch (err) {
             console.error('Failed to copy: ', err);
-            alert('Failed to copy email content. Please try again.');
+            this.toastService.error('Failed to copy email content. Please try again.');
         }
     }
 
     downloadPdf() {
         if (!this.invoiceService.validate()) {
-            alert('Please fix the validation errors before downloading.');
+            this.toastService.error('Please fix the validation errors before downloading.');
             return;
         }
 
@@ -122,10 +128,19 @@ export class AppComponent {
         this.tourService.startTour();
     }
 
+    resetData() {
+        if (confirm('Are you sure you want to reset all data? This cannot be undone.')) {
+            this.invoiceService.reset();
+            this.toastService.info('All data has been reset.');
+        }
+    }
+
     populateDummy = false;
     dummyStudentCount = 100;
 
     populateDummyData() {
         this.invoiceService.populateAllDummyData(this.dummyStudentCount);
+        this.toastService.success(`Populated ${this.dummyStudentCount} dummy students.`);
     }
 }
+
