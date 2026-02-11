@@ -68,7 +68,17 @@ export class InvoiceService {
     const item = localStorage.getItem(key);
     if (!item) return fallback;
     try {
-      return JSON.parse(item);
+      const parsed = JSON.parse(item);
+      // Handle array fallbacks (e.g. students list)
+      if (Array.isArray(fallback)) {
+        return Array.isArray(parsed) ? parsed : fallback;
+      }
+      // Handle object fallbacks (merge to ensure all keys exist)
+      if (typeof parsed === 'object' && parsed !== null) {
+        return { ...fallback, ...parsed };
+      }
+      // If parsed is a primitive (string/number/boolean) but fallback is object, ignore it
+      return fallback;
     } catch (e) {
       console.warn(`Failed to parse ${key} from localStorage, using fallback.`, e);
       return fallback;
