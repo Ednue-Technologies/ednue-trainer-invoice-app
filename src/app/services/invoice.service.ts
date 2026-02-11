@@ -1,4 +1,4 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, effect } from '@angular/core';
 
 export interface TrainerDetails {
   name: string;
@@ -50,7 +50,26 @@ export class InvoiceService {
     return c.totalStudents * c.pricePerStudent;
   });
 
-  constructor() { }
+  constructor() {
+    // Load from localStorage
+    const savedTrainer = localStorage.getItem('trainer');
+    if (savedTrainer) this.trainer.set(JSON.parse(savedTrainer));
+
+    const savedBank = localStorage.getItem('bank');
+    if (savedBank) this.bank.set(JSON.parse(savedBank));
+
+    const savedCourse = localStorage.getItem('course');
+    if (savedCourse) this.course.set(JSON.parse(savedCourse));
+
+    const savedStudents = localStorage.getItem('students');
+    if (savedStudents) this.students.set(JSON.parse(savedStudents));
+
+    // Persist to localStorage
+    effect(() => localStorage.setItem('trainer', JSON.stringify(this.trainer())));
+    effect(() => localStorage.setItem('bank', JSON.stringify(this.bank())));
+    effect(() => localStorage.setItem('course', JSON.stringify(this.course())));
+    effect(() => localStorage.setItem('students', JSON.stringify(this.students())));
+  }
 
   // Update Methods
   updateTrainer(data: Partial<TrainerDetails>) {
@@ -184,6 +203,14 @@ export class InvoiceService {
       endDate: '2023-11-30'
     }));
     this.students.set(dummyStudents);
+  }
+
+  reset() {
+    this.trainer.set({ name: '', email: '', contact: '', date: new Date().toISOString().split('T')[0] });
+    this.bank.set({ bankName: '', accountHolder: '', accountNumber: '', ifsc: '', branch: '', pan: '' });
+    this.course.set({ courseName: '', totalStudents: 0, pricePerStudent: 0 });
+    this.students.set([{ id: 1, name: '', courseName: '', duration: '', durationUnit: 'days', startDate: '', endDate: '' }]);
+    localStorage.clear();
   }
 
   // Validation State
